@@ -5,14 +5,15 @@ class ClassifierNeuralNet(object):
     to implement a classifier using a neural network.
     """
 
-    def __init__(self, num_features, num_hidden=1, activation="sigmoid",
-            num_classes=2):
+    def __init__(self, num_features, hidden_layer=[num_features*1.5], 
+            activation="sigmoid", num_classes=2):
         """Constructor for the RegressionNeuralNet class. The default number of
         output neurons is set to 1.
 
         num_features:   The number of features that each sample has. This will
                         equal the number of neurons in the input layer.
-        num_hidden:     The number of hidden layers of the neural network.
+        hidden_layer:   A list containing the number of nodes in the (i+1)th 
+                        hidden layer (for i starting at 0).
         activation:     The default activation function to use in each neuron.
                         Default is the sigmoid function: s(x) = 1/(1 + e^(-x))
                         TODO: Create a list of the default functions.
@@ -40,7 +41,8 @@ class ClassifierNeuralNet(object):
             self.num_classes = 2
             self.threshold = 0.5
 
-            super(self.__class__, self).__init__(num_features, 1)
+            super(self.__class__, self).__init__(num_features, num_output, \
+                    hidden_layer)
 
     def set_threshold(self, new_threshold):
         """In the case of a binary classification problem, sets the threshold

@@ -3,7 +3,7 @@ from scipy.special import expit
 class NeuralNet(object):
     """An implementation of a feed forward neural network."""
 
-    def __init__(self, num_features, num_output=1, num_hidden=1, 
+    def __init__(self, num_features, num_output=1, hidden_layer=[num_features*1.5], 
             activation="sigmoid"):
         """Constructor for the NeuralNet class.
 
@@ -11,7 +11,8 @@ class NeuralNet(object):
                         equal the number of neurons in the input layer.
         num_output:     The number of output labels each sample has. This will
                         equal the number of neurons in the output layer.
-        num_hidden:     The number of hidden layers of the neural network.
+        hidden_layer:   A list containing the number of nodes in the (i+1)th 
+                        hidden layer (for i starting at 0).
         activation:     The default activation function to use in each neuron.
                         Default is the sigmoid function: s(x) = 1/(1 + e^(-x))
                         TODO: Create a list of the default functions.
@@ -23,7 +24,7 @@ class NeuralNet(object):
             output label has not been implemented yet.")
 
         # TODO: Address this.
-        if num_hidden != 1:
+        if len(hidden_layer) > 1
             raise NotImplementedError("Neural network containing more than one
             hidden layer has not been implemented yet.")
 
@@ -38,3 +39,8 @@ class NeuralNet(object):
             raise NotImplementedError("Neural network that uses a default function
             other than the sigmoid function is not yet implemented.")
 
+        # List of the weight matrices here. If w_ij(k) is a weight in the matrix,
+        # it is the weight assigned to the edge from neuron i to neuron j in the
+        # kth layer from the input. (With k = 1, we have the first hidden layer.)
+        # TODO
+        raise NotImplementedError("TODO")
