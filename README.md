@@ -16,3 +16,5 @@ Resources
 =========
 <a href="http://page.mi.fu-berlin.de/rojas/neural/">Neural Networks - A Systematic
 Introduction (Raul Rojas)</a>
+<a href="http://stats.stackexchange.com/questions/181/how-to-choose-the-number-of-hidden-layers-and-nodes-in-a-feedforward-neural-netw">
+Cross Validated - How to choose the number of hidden layers and nodes in a feedforward neural network?</a>
