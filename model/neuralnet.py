@@ -1,4 +1,5 @@
 from scipy.special import expit
+import numpy as np
 
 class NeuralNet(object):
     """An implementation of a feed forward neural network."""
@@ -20,12 +21,12 @@ class NeuralNet(object):
 
         # TODO: Address this.
         if num_output != 1:
-            raise NotImplementedError("Neural network containing more than one
+            raise NotImplementedError("Neural network containing more than one \
             output label has not been implemented yet.")
 
         # TODO: Address this.
         if len(hidden_layer) > 1
-            raise NotImplementedError("Neural network containing more than one
+            raise NotImplementedError("Neural network containing more than one \
             hidden layer has not been implemented yet.")
 
         self.num_features = num_features
@@ -36,11 +37,23 @@ class NeuralNet(object):
         if acivation == "sigmoid":
             self.default_act = expit
         else:
-            raise NotImplementedError("Neural network that uses a default function
+            raise NotImplementedError("Neural network that uses a default function \
             other than the sigmoid function is not yet implemented.")
 
         # List of the weight matrices here. If w_ij(k) is a weight in the matrix,
         # it is the weight assigned to the edge from neuron i to neuron j in the
         # kth layer from the input. (With k = 1, we have the first hidden layer.)
-        # TODO
-        raise NotImplementedError("TODO")
+        self.init_weights()
+
+    def init_weights(self)
+        """Initializes the weights on the edges between neurons.
+        
+        TODO: Extend this neural network to allow for more than one hidden layer.
+        """
+        self.weights1 = np.random.rand(self.num_features + 1, self.num_hidden)
+        self.weights2 = np.random.rand(self.num_features + 1, self.num_hidden)
+        self.weights1[-1] = 1
+        self.weights2[-1] = 1
+
+
+

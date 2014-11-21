@@ -35,7 +35,7 @@ class ClassifierNeuralNet(object):
             raise ValueError("Invalid number of classes to classify.")
 
         elif num_classes > 2:
-            raise NotImplementedError("Classifying more than two classes has
+            raise NotImplementedError("Classifying more than two classes has \
             not been implemented yet.")
         else:
             self.num_classes = 2
@@ -49,7 +49,7 @@ class ClassifierNeuralNet(object):
         for which to consider a sample x as positive or negative.
         """
         if self.num_classes != 2:
-            raise ValueError("Cannot set thresholds for neural network that
+            raise ValueError("Cannot set thresholds for neural network that \
             distinguishes more than two classes.")
 
         self.threshold = new_threshold
