@@ -14,7 +14,10 @@ construction, but I plan to have it support the following:
 
 Resources
 =========
-<a href="http://page.mi.fu-berlin.de/rojas/neural/">Neural Networks - A Systematic
-Introduction (Raul Rojas)</a>
-<a href="http://stats.stackexchange.com/questions/181/how-to-choose-the-number-of-hidden-layers-and-nodes-in-a-feedforward-neural-netw">
-Cross Validated - How to choose the number of hidden layers and nodes in a feedforward neural network?</a>
+<ul>
+	<li><a href="http://page.mi.fu-berlin.de/rojas/neural/">Neural Networks - A Systematic
+	Introduction (Raul Rojas)</a></li>
+
+	<li> <a href="http://stats.stackexchange.com/questions/181/how-to-choose-the-number-of-hidden-layers-and-nodes-in-a-feedforward-neural-netw">
+	Cross Validated - How to choose the number of hidden layers and nodes in a feedforward neural network?</a></li>
+</ul>
