@@ -49,18 +49,20 @@ class NeuralNet(object):
 
     def init_weights(self)
         """Initializes the weights on the edges between neurons.
+		Weights are initialized to random values between -1 and 1.
         
         TODO: Extend this neural network to allow for more than one 
         hidden layer.
         """
-        self.weights1 = (2 * np.random.rand(self.num_features + 1, 
-                self.num_hidden) - 1)
-        self.weights2 = (2 * np.random.rand(self.num_features + 1, 
-                self.num_hidden) - 1)
+		rescale = lambda matrix : 2 * matrix - 1
+        self.weights1 = rescale(np.random.rand(self.num_features + 1, 
+                self.num_hidden)
+        self.weights2 = rescale(np.random.rand(self.num_features + 1, 
+                self.num_hidden))
         self.weights1[-1] = 1
         self.weights2[-1] = 1
 
-    def verity_data(self, data):
+    def verify_data(self, data):
         """Verifies that the data is in the form of a nested iterable, and 
         that each is of the length self.num_features. Also verifies that
         each inner nested object is a float type object.
@@ -87,11 +89,11 @@ class NeuralNet(object):
         a ValueError is raised."""
         self.verify_data(data)
         for sample in data:
-            outputs = self.feed_forward(sample) 
+            outputs = self.feed_forward(sample, all_layers=True) 
             deltas = self.backpropagate(outputs, targets)
             self.update_weights(deltas, outputs)
 
-    def feed_forward(self, sample):
+    def feed_forward(self, sample, all_layers=False):
         """Obtains the output from a feedforward computation.
         
         NOTE: Still under development. The constructor of the neural
@@ -147,7 +149,18 @@ class NeuralNet(object):
         # apply to weights2 and weights1
         return delta1, delta2
 
-    def update_weights(deltas, outputs):
+    def update_weights(self, deltas, outputs):
         """Updates the weights of the edges."""
         self.weights2.T += -self.learn_rate * deltas[1] * outputs[1]
         self.weights1.T += -self.learn_rate * deltas[0] * outputs[0]
+	
+	def score_data(self, data):
+		"""Performs predictions for each of the values stored in data.
+		
+		Returns a p-length tuple of predictions for each of the p samples.
+		"""
+		self.verify_data(data)
+		return tuple(self.score(sample) for sample in data)
+		
+	def score(self, sample):
+		return self.feed_forward(sample)
