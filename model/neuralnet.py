@@ -154,13 +154,13 @@ class NeuralNet(object):
         self.weights2.T += -self.learn_rate * deltas[1] * outputs[1]
         self.weights1.T += -self.learn_rate * deltas[0] * outputs[0]
 	
-	def score_data(self, data):
-		"""Performs predictions for each of the values stored in data.
-		
-		Returns a p-length tuple of predictions for each of the p samples.
-		"""
-		self.verify_data(data)
-		return tuple(self.score(sample) for sample in data)
-		
-	def score(self, sample):
-		return self.feed_forward(sample)
+    def score_data(self, data):
+            """Performs predictions for each of the values stored in data.
+            
+            Returns a p-length tuple of predictions for each of the p samples.
+            """
+            self.verify_data(data)
+            return tuple(self.score(sample) for sample in data)
+            
+    def score(self, sample):
+            return self.feed_forward(sample)
