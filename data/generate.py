@@ -15,8 +15,9 @@ def generate(l, m, n, numInstances):
     negative examples.
 
     The arguments are as follows:
-    l:  Number of relevant features in the dataset.
-    m:  The max index of which the relevant features can lie.
+    l:  Number of relevant features in the dataset. A sample needs at
+        least l 1's within the first m features to be tagged positive.
+    m:  Indicates the index after which the last relevant feature could exist.
     n:  The number of features in the dataset.
 
     In other words, the l relevant features must lie between indices 
@@ -26,7 +27,7 @@ def generate(l, m, n, numInstances):
     The resulting data is linearly separable; the output data is not non-linear.
     """
 
-    if not (0 < l <= m and l <= m < n):
+    if not (0 < l <= m and l <= m <= n):
         raise Exception("Invalid parameters to create dataset.")
 
     # The 2 below is just an arbitrary baseline.
@@ -71,7 +72,8 @@ def parse_args():
     parser = ArgumentParser(description="Generate some uniformly distributed \
             test data. Data is saved as a numInstances-by-(numFeatures + 1) \
             matrix in the specified text file.")
-    parser.add_argument("l", type=int, help="Number of relevant features")
+    parser.add_argument("l", type=int, help="Number of features needed \
+            to be tagged positive")
     parser.add_argument("m", type=int, help="Max index that relevant \
             features can appear.")
     parser.add_argument("n", type=int, help="Number of features per sample")
