@@ -2,11 +2,15 @@
 import numpy as np
 from classneuralnet import ClassifierNeuralNet
 
+
 def main():
     """Testing file to show neural network can learn linearly separable
     data."""
     data = np.genfromtxt("output.txt", delimiter=',')
-    print data
+    num_features = len(data[0]) - 1  # Subtract one because of target values
+
+    nn = ClassifierNeuralNet(num_features)
+    nn.train(data[:,:-1], data[:,-1])
 
 
 
