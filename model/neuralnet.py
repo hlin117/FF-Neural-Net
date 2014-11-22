@@ -36,6 +36,7 @@ class NeuralNet(object):
         # Assign activation function here, depending on the argument.
         if acivation == "sigmoid":
             self.default_act = expit
+            self.default_deriv = lambda x : expit(x) * (1 - expit(x))
         else:
             raise NotImplementedError("Neural network that uses a default function \
                     other than the sigmoid function is not yet implemented.")
@@ -86,7 +87,7 @@ class NeuralNet(object):
         for sample in data:
             outputs = self.feed_forward(sample) 
             errors = self.backpropagate(outputs, targets)
-            update_weights(errors)
+            self.update_weights(errors)
 
     def feed_forward(self, sample):
         """Obtains the output from a feedforward computation.
@@ -105,4 +106,34 @@ class NeuralNet(object):
         return (output1, output2)
 
     def backpropagate(outputs, targets):
-        pass
+        """Performs the backpropogation algorithm to determine the error.
+
+        TODO: The current implementation assumes that
+        1. The error function to minimize is least-squares
+        2. The activation function used is the sigmoid
+        3. There is only one hidden layer
+
+        I'm going to need to update this code later on in the future...
+
+        TODO: Explain the naming convention of variables with more detail
+        in the future.
+        """
+
+        if len(outputs != 2):
+            raise ValueError("Two output matrices not expected, since there is \
+                    only one hidden unit")
+
+        if len(outputs[1]) != 1) or len(targets[1] != 1):
+            raise ValueError("Current implementation is not sophisticated enough \
+                    to handle more than one output neuron.")
+
+        # NOTE: Assuming that the output has already been calculated
+        sig_deriv = lambda x : x * (1 - x)
+        derivs2 = np.diag(sig_deriv(outputs[1]))
+        derivs1 = np.diag(sig_deriv(outputs[0]))
+
+        error_deriv = np.array(outputs[1][0] - targets[1][0])
+        delta2 = derivs2 * error_deriv
+        delta1 = derivs1 * self.weights2[:-1] * delta2
+
+        return delta1, delta2
