@@ -1,6 +1,6 @@
 from neuralnet import NeuralNet
 
-class ClassifierNeuralNet(object):
+class ClassifierNeuralNet(NeuralNet):
     """Acts as a wrapper around a normal neural network to provide an interface 
     to implement a classifier using a neural network.
     """
@@ -41,7 +41,7 @@ class ClassifierNeuralNet(object):
             self.num_classes = 2
             self.threshold = 0.5
 
-            super(self.__class__, self).__init__(num_features, num_classes, \
+            super(self.__class__, self).__init__(num_features, 1,
                     hidden_layer, activation)
 
     def set_threshold(self, new_threshold):

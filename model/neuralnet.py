@@ -1,4 +1,5 @@
 from scipy.special import expit
+import math
 import numpy as np
 
 class NeuralNet(object):
@@ -22,24 +23,24 @@ class NeuralNet(object):
         # NOTE: There is no proven evidence that the ideal number of
         # nodes in the hidden layer is 1.5, but it is suggested.
         if hidden_layer is None:
-            hidden_layer = [num_features * 1.5]
+            hidden_layer = [int(math.floor(num_features * 1.5))]
 
         # TODO: Address this.
         if num_output != 1:
-            raise NotImplementedError("Neural network containing more than one \
-                    output label has not been implemented yet.")
+            raise NotImplementedError('Neural network containing more than one \
+                    output label has not been implemented yet.'.replace("\n", ""))
 
         # TODO: Address this.
         if len(hidden_layer) > 1:
             raise NotImplementedError("Neural network containing more than one \
-                    hidden layer has not been implemented yet.")
+                    hidden layer has not been implemented yet.".replace("\n", ""))
 
         self.num_features = num_features
         self.num_output = num_output
-        self.num_hidden = num_hidden
+        self.hidden_layer = hidden_layer
 
         # Assign activation function here, depending on the argument.
-        if acivation == "sigmoid":
+        if activation == "sigmoid":
             self.default_act = expit
             self.default_deriv = lambda x : expit(x) * (1 - expit(x))
         else:
@@ -54,16 +55,16 @@ class NeuralNet(object):
 
     def init_weights(self):
         """Initializes the weights on the edges between neurons.
-		Weights are initialized to random values between -1 and 1.
+        Weights are initialized to random values between -1 and 1.
         
         TODO: Extend this neural network to allow for more than one 
         hidden layer.
         """
-	rescale = lambda matrix : 2 * matrix - 1
-        self.weights1 = rescale(np.random.rand(self.num_features + 1, \
-                self.num_hidden))
-        self.weights2 = rescale(np.random.rand(self.num_features + 1, \
-                self.num_hidden))
+        rescale = lambda matrix : 2 * matrix - 1
+        self.weights1 = rescale(np.random.rand(self.num_features + 1,
+                self.hidden_layer[0]))
+        self.weights2 = rescale(np.random.rand(self.hidden_layer[0] + 1,
+                self.num_output))
         self.weights1[-1] = 1
         self.weights2[-1] = 1
 
@@ -78,12 +79,12 @@ class NeuralNet(object):
         for sample in data:
             if len(sample) != self.num_features:
                 raise ValueError("Input data is not of the same length \
-                        as the number of input neurons: {0}".format(innerlist))
+                        as the number of input neurons: {0}".replace("\n", "").format(sample))
 
             for feature in sample:
-                if isinstance(feature, (int, float)):
+                if not isinstance(feature, (int, float)):
                     raise ValueError("Detected feature that is not compatible \
-                            with the Neural Network: {0}".format(feature))
+                            with the Neural Network: {0}".replace("\n", "").format(feature))
 
     def train(self, data, targets):
         """Trains the neural network on a set of data. Data should be
@@ -105,20 +106,25 @@ class NeuralNet(object):
         network should prevent any NN with more than one hidden layer
         from being constructed."""
         # Represents the augmented input data
-        input_aug = np.array(sample, dtype=float).append(1)
+        input_aug = np.append(np.array(sample, dtype=float), 1)
+        input_aug = input_aug.T  #reshape((1, len(input_aug)))
 
         # Calculates the augmented output of the hidden layer
-        excite1 = input_aug * self.weights1
+        excite1 = np.dot(input_aug, self.weights1)
         output1 = self.default_act(excite1)
-        output1_aug = output1.append(1)
+        output1_aug = np.append(output1, 1)
+        output1_aug = output1_aug.T  #.reshape(1, len(output1_aug))
 
         # Calculates the (non-augmented) output of the output layer
-        excite2 = output1_aug * self.weights2
+        excite2 = np.dot(output1_aug, self.weights2)
         output2 = self.default_act(excite2)
 
-        return input_aug, output1_aug, output2
+        if all_layers:
+            return input_aug, output1_aug, output2
+        else:
+            return output2
 
-    def backpropagate(outputs, targets):
+    def backpropagate(self, outputs, targets):
         """Performs the backpropogation algorithm to determine the error.
 
         TODO: The current implementation assumes that
@@ -132,11 +138,11 @@ class NeuralNet(object):
         in the future.
         """
 
-        if len(outputs != 3):
+        if len(outputs) != 3:
             raise ValueError("Currently only expecting three output vectors \
                     for each of the layers.")
 
-        if len(outputs[-1]) != 1 or len(targets[-1] != 1):
+        if len(outputs[-1]) != 1 or len(targets[-1]) != 1:
             raise ValueError("Current implementation cannot handle \
                     more than one output neuron.")
 
@@ -158,7 +164,7 @@ class NeuralNet(object):
         """Updates the weights of the edges."""
         self.weights2.T += -self.learn_rate * deltas[1] * outputs[1]
         self.weights1.T += -self.learn_rate * deltas[0] * outputs[0]
-	
+
     def score_data(self, data):
             """Performs predictions for each of the values stored in data.
             
