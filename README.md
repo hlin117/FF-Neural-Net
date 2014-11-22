@@ -29,3 +29,5 @@ and the demo scripts located in /demo:
 ```
 ./link.sh
 ```
+This will also add these links to the ./demo/.gitignore, so they will not be
+duplicated under version control.
