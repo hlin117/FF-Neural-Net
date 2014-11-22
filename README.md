@@ -21,3 +21,11 @@ Resources
 	<li> <a href="http://stats.stackexchange.com/questions/181/how-to-choose-the-number-of-hidden-layers-and-nodes-in-a-feedforward-neural-netw">
 	Cross Validated - How to choose the number of hidden layers and nodes in a feedforward neural network?</a></li>
 </ul>
+
+Set up
+======
+Run the following script to create hard links between the neural network files
+and the demo scripts located in /demo:
+```
+./link.sh
+```

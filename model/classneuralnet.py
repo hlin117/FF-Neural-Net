@@ -5,8 +5,8 @@ class ClassifierNeuralNet(object):
     to implement a classifier using a neural network.
     """
 
-    def __init__(self, num_features, hidden_layer=[num_features*1.5], 
-            activation="sigmoid", num_classes=2):
+    def __init__(self, num_features, hidden_layer=None, activation="sigmoid", 
+                num_classes=2):
         """Constructor for the RegressionNeuralNet class. The default number of
         output neurons is set to 1.
 
@@ -41,8 +41,8 @@ class ClassifierNeuralNet(object):
             self.num_classes = 2
             self.threshold = 0.5
 
-            super(self.__class__, self).__init__(num_features, num_output, \
-                    hidden_layer)
+            super(self.__class__, self).__init__(num_features, num_classes, \
+                    hidden_layer, activation)
 
     def set_threshold(self, new_threshold):
         """In the case of a binary classification problem, sets the threshold

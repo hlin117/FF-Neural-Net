@@ -4,7 +4,7 @@ import numpy as np
 class NeuralNet(object):
     """An implementation of a feed forward neural network."""
 
-    def __init__(self, num_features, num_output=1, hidden_layer=[num_features*1.5], 
+    def __init__(self, num_features, num_output=1, hidden_layer=None, 
             activation="sigmoid", learn_rate=1):
         """Constructor for the NeuralNet class.
 
@@ -19,13 +19,18 @@ class NeuralNet(object):
                         TODO: Create a list of the default functions.
         """
 
+        # NOTE: There is no proven evidence that the ideal number of
+        # nodes in the hidden layer is 1.5, but it is suggested.
+        if hidden_layer is None:
+            hidden_layer = [num_features * 1.5]
+
         # TODO: Address this.
         if num_output != 1:
             raise NotImplementedError("Neural network containing more than one \
                     output label has not been implemented yet.")
 
         # TODO: Address this.
-        if len(hidden_layer) > 1
+        if len(hidden_layer) > 1:
             raise NotImplementedError("Neural network containing more than one \
                     hidden layer has not been implemented yet.")
 
@@ -47,17 +52,17 @@ class NeuralNet(object):
         self.learn_rate = learn_rate
         self.init_weights()
 
-    def init_weights(self)
+    def init_weights(self):
         """Initializes the weights on the edges between neurons.
 		Weights are initialized to random values between -1 and 1.
         
         TODO: Extend this neural network to allow for more than one 
         hidden layer.
         """
-		rescale = lambda matrix : 2 * matrix - 1
-        self.weights1 = rescale(np.random.rand(self.num_features + 1, 
-                self.num_hidden)
-        self.weights2 = rescale(np.random.rand(self.num_features + 1, 
+	rescale = lambda matrix : 2 * matrix - 1
+        self.weights1 = rescale(np.random.rand(self.num_features + 1, \
+                self.num_hidden))
+        self.weights2 = rescale(np.random.rand(self.num_features + 1, \
                 self.num_hidden))
         self.weights1[-1] = 1
         self.weights2[-1] = 1
@@ -80,7 +85,7 @@ class NeuralNet(object):
                     raise ValueError("Detected feature that is not compatible \
                             with the Neural Network: {0}".format(feature))
 
-    def train(self, data, targets)
+    def train(self, data, targets):
         """Trains the neural network on a set of data. Data should be
         in the form of two nested ordered iterables. Uses the backpropagation
         algorithm to adjust the weights of the edges.
@@ -131,7 +136,7 @@ class NeuralNet(object):
             raise ValueError("Currently only expecting three output vectors \
                     for each of the layers.")
 
-        if len(outputs[-1]) != 1) or len(targets[-1] != 1):
+        if len(outputs[-1]) != 1 or len(targets[-1] != 1):
             raise ValueError("Current implementation cannot handle \
                     more than one output neuron.")
 
