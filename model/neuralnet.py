@@ -5,7 +5,7 @@ class NeuralNet(object):
     """An implementation of a feed forward neural network."""
 
     def __init__(self, num_features, num_output=1, hidden_layer=[num_features*1.5], 
-            activation="sigmoid"):
+            activation="sigmoid", learn_rate=1):
         """Constructor for the NeuralNet class.
 
         num_features:   The number of features that each sample has. This will
@@ -44,15 +44,19 @@ class NeuralNet(object):
         # List of the weight matrices here. If w_ij(k) is a weight in the matrix,
         # it is the weight assigned to the edge from neuron i to neuron j in the
         # kth layer from the input. (With k = 1, we have the first hidden layer.)
+        self.learn_rate = learn_rate
         self.init_weights()
 
     def init_weights(self)
         """Initializes the weights on the edges between neurons.
         
-        TODO: Extend this neural network to allow for more than one hidden layer.
+        TODO: Extend this neural network to allow for more than one 
+        hidden layer.
         """
-        self.weights1 = np.random.rand(self.num_features + 1, self.num_hidden)
-        self.weights2 = np.random.rand(self.num_features + 1, self.num_hidden)
+        self.weights1 = (2 * np.random.rand(self.num_features + 1, 
+                self.num_hidden) - 1)
+        self.weights2 = (2 * np.random.rand(self.num_features + 1, 
+                self.num_hidden) - 1)
         self.weights1[-1] = 1
         self.weights2[-1] = 1
 
@@ -74,8 +78,6 @@ class NeuralNet(object):
                     raise ValueError("Detected feature that is not compatible \
                             with the Neural Network: {0}".format(feature))
 
-
-
     def train(self, data, targets)
         """Trains the neural network on a set of data. Data should be
         in the form of two nested ordered iterables. Uses the backpropagation
@@ -86,8 +88,8 @@ class NeuralNet(object):
         self.verify_data(data)
         for sample in data:
             outputs = self.feed_forward(sample) 
-            errors = self.backpropagate(outputs, targets)
-            self.update_weights(errors)
+            deltas = self.backpropagate(outputs, targets)
+            self.update_weights(deltas, outputs)
 
     def feed_forward(self, sample):
         """Obtains the output from a feedforward computation.
@@ -95,15 +97,19 @@ class NeuralNet(object):
         NOTE: Still under development. The constructor of the neural
         network should prevent any NN with more than one hidden layer
         from being constructed."""
+        # Represents the augmented input data
         input_aug = np.array(sample, dtype=float).append(1)
+
+        # Calculates the augmented output of the hidden layer
         excite1 = input_aug * self.weights1
         output1 = self.default_act(excite1)
-
         output1_aug = output1.append(1)
+
+        # Calculates the (non-augmented) output of the output layer
         excite2 = output1_aug * self.weights2
         output2 = self.default_act(excite2)
 
-        return (output1, output2)
+        return input_aug, output1_aug, output2
 
     def backpropagate(outputs, targets):
         """Performs the backpropogation algorithm to determine the error.
@@ -119,21 +125,29 @@ class NeuralNet(object):
         in the future.
         """
 
-        if len(outputs != 2):
-            raise ValueError("Two output matrices not expected, since there is \
-                    only one hidden unit")
+        if len(outputs != 3):
+            raise ValueError("Currently only expecting three output vectors \
+                    for each of the layers.")
 
-        if len(outputs[1]) != 1) or len(targets[1] != 1):
-            raise ValueError("Current implementation is not sophisticated enough \
-                    to handle more than one output neuron.")
+        if len(outputs[-1]) != 1) or len(targets[-1] != 1):
+            raise ValueError("Current implementation cannot handle \
+                    more than one output neuron.")
 
         # NOTE: Assuming that the output has already been calculated
+        # x is an output of the sigmoid function.
         sig_deriv = lambda x : x * (1 - x)
-        derivs2 = np.diag(sig_deriv(outputs[1]))
-        derivs1 = np.diag(sig_deriv(outputs[0]))
+        derivs2 = np.diag(sig_deriv(outputs[2]))
+        derivs1 = np.diag(sig_deriv(outputs[1]))
 
-        error_deriv = np.array(outputs[1][0] - targets[1][0])
+        error_deriv = np.array(outputs[-1] - targets)
         delta2 = derivs2 * error_deriv
         delta1 = derivs1 * self.weights2[:-1] * delta2
 
+        # delta2 and delta1 will be the "correction" that we have to
+        # apply to weights2 and weights1
         return delta1, delta2
+
+    def update_weights(deltas, outputs):
+        """Updates the weights of the edges."""
+        self.weights2.T += -self.learn_rate * deltas[1] * outputs[1]
+        self.weights1.T += -self.learn_rate * deltas[0] * outputs[0]
