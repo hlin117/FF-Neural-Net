@@ -57,7 +57,7 @@ class NeuralNet(object):
         """Initializes the weights on the edges between neurons.
         Weights are initialized to random values between -1 and 1.
         
-        TODO: Extend this neural network to allow for more than one 
+        TODO: Extend this neural network to allow for more than one
         hidden layer.
         """
         rescale = lambda matrix : 2 * matrix - 1
@@ -94,9 +94,9 @@ class NeuralNet(object):
         Each inner iterable should be of length num_features. If not, then
         a ValueError is raised."""
         self.verify_data(data)
-        for sample in data:
+        for i, sample in enumerate(data):
             outputs = self.feed_forward(sample, all_layers=True) 
-            deltas = self.backpropagate(outputs, targets)
+            deltas = self.backpropagate(outputs, targets[i])
             self.update_weights(deltas, outputs)
 
     def feed_forward(self, sample, all_layers=False):
@@ -142,7 +142,7 @@ class NeuralNet(object):
             raise ValueError("Currently only expecting three output vectors \
                     for each of the layers.")
 
-        if len(outputs[-1]) != 1 or len(targets[-1]) != 1:
+        if len(outputs[-1]) != 1 or len(targets) != 1:
             raise ValueError("Current implementation cannot handle \
                     more than one output neuron.")
 
@@ -150,11 +150,12 @@ class NeuralNet(object):
         # x is an output of the sigmoid function.
         sig_deriv = lambda x : x * (1 - x)
         derivs2 = np.diag(sig_deriv(outputs[2]))
-        derivs1 = np.diag(sig_deriv(outputs[1]))
+        derivs1 = np.diag(sig_deriv(outputs[1][:-1]))
 
         error_deriv = np.array(outputs[-1] - targets)
-        delta2 = derivs2 * error_deriv
-        delta1 = derivs1 * self.weights2[:-1] * delta2
+        delta2 = np.dot(derivs2, error_deriv).reshape((self.num_output, 1))
+        prod1 = np.dot(derivs1, self.weights2[:-1])
+        delta1 = np.dot(prod1, delta2)
 
         # delta2 and delta1 will be the "correction" that we have to
         # apply to weights2 and weights1
@@ -162,8 +163,9 @@ class NeuralNet(object):
 
     def update_weights(self, deltas, outputs):
         """Updates the weights of the edges."""
-        self.weights2.T += -self.learn_rate * deltas[1] * outputs[1]
-        self.weights1.T += -self.learn_rate * deltas[0] * outputs[0]
+        prod1 = -self.learn_rate * np.dot(deltas[1], outputs[1].reshape(1, len(outputs[1])))
+        self.weights2 += (prod1).T
+        self.weights1 += (-self.learn_rate * np.dot(deltas[0], outputs[0])).T
 
     def score_data(self, data):
             """Performs predictions for each of the values stored in data.

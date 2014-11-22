@@ -10,10 +10,10 @@ def main():
     num_features = len(data[0]) - 1  # Subtract one because of target values
 
     nn = ClassifierNeuralNet(num_features)
-    nn.train(data[:,:-1], data[:,-1])
 
-
-
+    # NOTE: We have to wrap every target value into a vector, for the
+    # purpose of being able to classify vectors later.
+    nn.train(data[:,:-1], tuple((val,) for val in data[:,-1]))
 
 if __name__ == "__main__":
     main()
