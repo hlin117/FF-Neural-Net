@@ -14,6 +14,7 @@ def main():
     # NOTE: We have to wrap every target value into a vector, for the
     # purpose of being able to classify vectors later.
     nn.train(data[:,:-1], tuple((val,) for val in data[:,-1]))
+    print "Done with training"
 
 if __name__ == "__main__":
     main()

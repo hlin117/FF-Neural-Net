@@ -61,12 +61,12 @@ class NeuralNet(object):
         hidden layer.
         """
         rescale = lambda matrix : 2 * matrix - 1
-        self.weights1 = rescale(np.random.rand(self.num_features + 1,
-                self.hidden_layer[0]))
-        self.weights2 = rescale(np.random.rand(self.hidden_layer[0] + 1,
-                self.num_output))
-        self.weights1[-1] = 1
-        self.weights2[-1] = 1
+        self.weights1 = np.mat(rescale(np.random.rand(self.num_features + 1,
+                self.hidden_layer[0])))
+        self.weights2 = np.mat(rescale(np.random.rand(self.hidden_layer[0] + 1,
+                self.num_output)))
+        self.weights1[-1, :] = 1
+        self.weights2[-1, :] = 1
 
     def verify_data(self, data):
         """Verifies that the data is in the form of a nested iterable, and 
@@ -106,17 +106,15 @@ class NeuralNet(object):
         network should prevent any NN with more than one hidden layer
         from being constructed."""
         # Represents the augmented input data
-        input_aug = np.append(np.array(sample, dtype=float), 1)
-        input_aug = input_aug.T  #reshape((1, len(input_aug)))
+        input_aug = np.mat(np.append(np.array(sample, dtype=float), 1))
 
         # Calculates the augmented output of the hidden layer
-        excite1 = np.dot(input_aug, self.weights1)
+        excite1 = input_aug * self.weights1
         output1 = self.default_act(excite1)
-        output1_aug = np.append(output1, 1)
-        output1_aug = output1_aug.T  #.reshape(1, len(output1_aug))
+        output1_aug = np.mat(np.append(np.array(output1), 1))
 
         # Calculates the (non-augmented) output of the output layer
-        excite2 = np.dot(output1_aug, self.weights2)
+        excite2 = output1_aug * self.weights2
         output2 = self.default_act(excite2)
 
         if all_layers:
@@ -148,14 +146,17 @@ class NeuralNet(object):
 
         # NOTE: Assuming that the output has already been calculated
         # x is an output of the sigmoid function.
-        sig_deriv = lambda x : x * (1 - x)
+        sig_deriv = np.vectorize(lambda x : x * (1 - x))
         derivs2 = np.diag(sig_deriv(outputs[2]))
-        derivs1 = np.diag(sig_deriv(outputs[1][:-1]))
 
-        error_deriv = np.array(outputs[-1] - targets)
-        delta2 = np.dot(derivs2, error_deriv).reshape((self.num_output, 1))
-        prod1 = np.dot(derivs1, self.weights2[:-1])
-        delta1 = np.dot(prod1, delta2)
+        # NOTE: The "diag" command only works with nd arrays that are flattened...
+        derivs1 = np.diag(np.asarray(sig_deriv(outputs[1][:,:-1])).flatten())
+
+        # TODO: FIGURE OUT WHAT MATRIX DIMENSIONS ARE HERE
+        error_deriv = np.mat(np.array(outputs[-1] - targets))
+        delta2 = derivs2 * error_deriv
+        prod1 = derivs1 * self.weights2[:-1,:]
+        delta1 = prod1 * delta2
 
         # delta2 and delta1 will be the "correction" that we have to
         # apply to weights2 and weights1
@@ -163,9 +164,10 @@ class NeuralNet(object):
 
     def update_weights(self, deltas, outputs):
         """Updates the weights of the edges."""
-        prod1 = -self.learn_rate * np.dot(deltas[1], outputs[1].reshape(1, len(outputs[1])))
+        prod1 = -self.learn_rate * deltas[1] * outputs[1]
         self.weights2 += (prod1).T
-        self.weights1 += (-self.learn_rate * np.dot(deltas[0], outputs[0])).T
+        self.weights1 += (-self.learn_rate * deltas[0] * outputs[0]).T
+        return
 
     def score_data(self, data):
             """Performs predictions for each of the values stored in data.
