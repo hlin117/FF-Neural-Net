@@ -164,10 +164,8 @@ class NeuralNet(object):
 
     def update_weights(self, deltas, outputs):
         """Updates the weights of the edges."""
-        prod1 = -self.learn_rate * deltas[1] * outputs[1]
-        self.weights2 += (prod1).T
+        self.weights2 += (-self.learn_rate * deltas[1] * outputs[1]).T
         self.weights1 += (-self.learn_rate * deltas[0] * outputs[0]).T
-        return
 
     def score_data(self, data):
             """Performs predictions for each of the values stored in data.
