@@ -56,6 +56,10 @@ class ClassifierNeuralNet(NeuralNet):
         self.threshold = new_threshold
                         
     def score(self, sample):
-        value = super(self.__class__, self).score(sample)
-        print "Result: " + str(value)
+        """Returns 1 if and only if score(sample) >= 0.
+
+        Note that the true returned value is a matrix, so we have to
+        do score(sample)[0, 0]
+        """
+        value = super(self.__class__, self).score(sample)[0, 0]
         return 1 if value >= self.threshold else -1

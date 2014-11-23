@@ -52,6 +52,8 @@ class NeuralNet(object):
         # kth layer from the input. (With k = 1, we have the first hidden layer.)
         self.learn_rate = learn_rate
         self.default_bias = default_bias
+        self.error = lambda x, y : 0.5 * (x - y)**2  # Least means square
+        self.stop_error = 0.05
         self.init_weights()
 
     def init_weights(self):
@@ -94,12 +96,27 @@ class NeuralNet(object):
         algorithm to adjust the weights of the edges.
 
         Each inner iterable should be of length num_features. If not, then
-        a ValueError is raised."""
+        a ValueError is raised.
+
+        Continues training until we have pass through the training set
+        at least one, and the error is sufficiently small."""
         self.verify_data(data)
-        for i, sample in enumerate(data):
-            outputs = self.feed_forward(sample, all_layers=True) 
-            deltas = self.backpropagate(outputs, targets[i])
-            self.update_weights(deltas, outputs)
+
+        large_error = True
+        first_pass = True
+        while large_error:
+            for i, sample in enumerate(data):
+                outputs = self.feed_forward(sample, all_layers=True)
+                deltas = self.backpropagate(outputs, targets[i])
+                self.update_weights(deltas, outputs)
+
+                # Check whether we should break out
+                error = self.error(outputs[-1][0, 0], targets[i])
+                if error < self.stop_error and not first_pass:
+                    large_error = False
+                    break
+            first_pass = False
+
 
     def feed_forward(self, sample, all_layers=False):
         """Obtains the output from a feedforward computation.
@@ -176,5 +193,4 @@ class NeuralNet(object):
             return tuple(self.score(sample) for sample in data)
             
     def score(self, sample):
-        value = self.feed_forward(sample)
-        return value
+        return self.feed_forward(sample)
