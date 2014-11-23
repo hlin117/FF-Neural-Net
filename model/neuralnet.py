@@ -6,7 +6,7 @@ class NeuralNet(object):
     """An implementation of a feed forward neural network."""
 
     def __init__(self, num_features, num_output=1, hidden_layer=None, 
-            activation="sigmoid", learn_rate=1):
+            activation="sigmoid", learn_rate=1, default_bias=1):
         """Constructor for the NeuralNet class.
 
         num_features:   The number of features that each sample has. This will
@@ -51,6 +51,7 @@ class NeuralNet(object):
         # it is the weight assigned to the edge from neuron i to neuron j in the
         # kth layer from the input. (With k = 1, we have the first hidden layer.)
         self.learn_rate = learn_rate
+        self.default_bias = default_bias
         self.init_weights()
 
     def init_weights(self):
@@ -60,13 +61,13 @@ class NeuralNet(object):
         TODO: Extend this neural network to allow for more than one
         hidden layer.
         """
-        rescale = lambda matrix : 2 * matrix - 1
+        rescale = lambda matrix : 10 * matrix # 2 * matrix - 1
         self.weights1 = np.mat(rescale(np.random.rand(self.num_features + 1,
                 self.hidden_layer[0])))
         self.weights2 = np.mat(rescale(np.random.rand(self.hidden_layer[0] + 1,
                 self.num_output)))
-        self.weights1[-1, :] = 1
-        self.weights2[-1, :] = 1
+        self.weights1[-1, :] = self.default_bias
+        self.weights2[-1, :] = self.default_bias
 
     def verify_data(self, data):
         """Verifies that the data is in the form of a nested iterable, and 
@@ -139,7 +140,7 @@ class NeuralNet(object):
 
         if len(outputs) != 3:
             raise ValueError("Currently only expecting three output vectors \
-                    for each of the layers.")
+                    from each of the layers.")
 
         if len(outputs[-1]) != 1 or len(targets) != 1:
             raise ValueError("Current implementation cannot handle \
@@ -153,11 +154,9 @@ class NeuralNet(object):
         # NOTE: The "diag" command only works with nd arrays that are flattened...
         derivs1 = np.diag(np.asarray(sig_deriv(outputs[1][:,:-1])).flatten())
 
-        # TODO: FIGURE OUT WHAT MATRIX DIMENSIONS ARE HERE
         error_deriv = np.mat(np.array(outputs[-1] - targets))
         delta2 = derivs2 * error_deriv
-        prod1 = derivs1 * self.weights2[:-1,:]
-        delta1 = prod1 * delta2
+        delta1 = derivs1 * self.weights2[:-1,:] * delta2
 
         # delta2 and delta1 will be the "correction" that we have to
         # apply to weights2 and weights1
@@ -177,4 +176,5 @@ class NeuralNet(object):
             return tuple(self.score(sample) for sample in data)
             
     def score(self, sample):
-            return self.feed_forward(sample)
+        value = self.feed_forward(sample)
+        return value

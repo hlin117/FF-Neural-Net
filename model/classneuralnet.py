@@ -6,7 +6,7 @@ class ClassifierNeuralNet(NeuralNet):
     """
 
     def __init__(self, num_features, hidden_layer=None, activation="sigmoid", 
-                num_classes=2):
+                num_classes=2, learn_rate=1, default_bias=1):
         """Constructor for the RegressionNeuralNet class. The default number of
         output neurons is set to 1.
 
@@ -42,7 +42,8 @@ class ClassifierNeuralNet(NeuralNet):
             self.threshold = 0.5
 
             super(self.__class__, self).__init__(num_features, 1,
-                    hidden_layer, activation)
+                    hidden_layer, activation, learn_rate=learn_rate,
+                    default_bias=default_bias)
 
     def set_threshold(self, new_threshold):
         """In the case of a binary classification problem, sets the threshold
@@ -56,4 +57,5 @@ class ClassifierNeuralNet(NeuralNet):
                         
     def score(self, sample):
         value = super(self.__class__, self).score(sample)
+        print "Result: " + str(value)
         return 1 if value >= self.threshold else -1
