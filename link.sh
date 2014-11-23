@@ -1,6 +1,7 @@
 #!/bin/bash
 
-lin_sep=("classneuralnet.py" "neuralnet.py")
+models=("classneuralnet.py" "neuralnet.py")
+folders=("lin_separable" "xor_dataset")
 
 # For the case that we just want to remove all of the generated
 # links and the .gitignore
@@ -10,10 +11,15 @@ if [ "$1" = "reset" ]; then
 		rm demo/.gitignore
 	fi
 
-	for i in "${lin_sep[@]}"; do
-		if [ -f demo/lin_separable/$i ]; then
-			rm demo/lin_separable/$i
-		fi
+	for folder in "${folders[@]}"; do
+		for model in "${models[@]}"; do
+			if [ -f demo/$folder/$model ]; then
+				rm demo/$folder/$model
+			else
+				echo "Couldn't find file demo/$folder/$model"
+			fi
+		done
+
 	done
 	echo "Removed ./demo/.gitignore and other links"
 	exit 0
@@ -32,12 +38,14 @@ fi
 # TODO: Just write a recursive function for this instead of manually
 # linking each one...
 
-for i in "${lin_sep[@]}"; do
-	if [ -f demo/lin_separable/$i ]; then
-		continue
-	fi
-	ln model/$i demo/lin_separable/$i
-	echo $i >> demo/.gitignore
+for folder in "${folders[@]}"; do
+	for model in "${models[@]}"; do
+		if [ -f demo/$folder/$model ]; then
+			continue
+		fi
+		ln model/$model demo/$folder/$model
+		echo $folder/$model >> demo/.gitignore
+	done
 done
 
 echo "Done linking. The neural network is ready to be demo-ed."
