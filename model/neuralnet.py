@@ -63,7 +63,8 @@ class NeuralNet(object):
         TODO: Extend this neural network to allow for more than one
         hidden layer.
         """
-        rescale = lambda matrix : matrix - 1
+        aug = 6
+        rescale = lambda matrix : aug *matrix - aug / 2
         self.weights1 = np.mat(rescale(np.random.rand(self.num_features + 1,
                 self.hidden_layer[0])))
         self.weights2 = np.mat(rescale(np.random.rand(self.hidden_layer[0] + 1,
@@ -104,6 +105,7 @@ class NeuralNet(object):
 
         large_error = True
         first_pass = True
+        min_error = 1
         while large_error:
             for i, sample in enumerate(data):
                 outputs = self.feed_forward(sample, all_layers=True)
@@ -111,7 +113,7 @@ class NeuralNet(object):
                 self.update_weights(deltas, outputs)
 
                 # Check whether we should break out
-                error = self.error(outputs[-1][0, 0], targets[i])
+                error = self.error(outputs[-1][0, 0], targets[i][0])
                 if error < self.stop_error and not first_pass:
                     large_error = False
                     break

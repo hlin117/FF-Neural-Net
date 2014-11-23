@@ -13,11 +13,18 @@ this project:
 ./link
 ```
 The script to create testing data is located in the project's
-data folder. To generate a testing file here, use the following:
+data folder. To generate a training file here, use the following:
 ```bash
-chmod u+rwx ./../../data/gen_linear.py
-./../../data/gen_linear.py 5 10 20 100 output.txt
+./../../data/gen_linear.py 5 10 15 5000 output.txt
 ```
+
 This will create a file called `output.txt` in this directory,
 with 5 relevant features between indices 0 to 10 (exclusive),
-each sample containing 20 features.
+each sample containing 20 features. This dataset will contain 
+2000 training samples.
+
+To generate a complementing testing set, use the following:
+```bash
+./../../data/gen_linear.py 5 10 15 100 output.txt --split
+```
+
