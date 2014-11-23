@@ -79,7 +79,8 @@ class NeuralNet(object):
         for sample in data:
             if len(sample) != self.num_features:
                 raise ValueError("Input data is not of the same length \
-                        as the number of input neurons: {0}".replace("\n", "").format(sample))
+                        as the number of input neurons. Received {0}, not {1} \
+                        ".replace("\n", "").replace("  ", "").format(len(sample), self.num_features))
 
             for feature in sample:
                 if not isinstance(feature, (int, float)):

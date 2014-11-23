@@ -79,6 +79,9 @@ def parse_args():
     parser.add_argument("n", type=int, help="Number of features per sample")
     parser.add_argument("numInstances", type=int, help="Number of samples \
             sought from the dataset")
+    parser.add_argument("--split", help="Choose to save outputs and \
+            targets in different files", action="store_true")
+
     parser.add_argument("file", type=str, help="Output file name")
     args = parser.parse_args()
     return args
@@ -86,7 +89,11 @@ def parse_args():
 def main():
     args = parse_args()
     samples, targets = generate(args.l, args.m, args.n, args.numInstances)
-    np.savetxt(args.file, np.hstack((samples, targets)), delimiter=",", fmt="%.0f")
+    if args.split:
+        np.savetxt(args.file + "_features", samples, delimiter=",", fmt="%.0f")
+        np.savetxt(args.file + "_targets", targets, delimiter=",", fmt="%.0f")
+    else:
+        np.savetxt(args.file, np.hstack((samples, targets)), delimiter=",", fmt="%.0f")
 
 if __name__ == "__main__":
     main()

@@ -55,5 +55,5 @@ class ClassifierNeuralNet(NeuralNet):
         self.threshold = new_threshold
                         
     def score(self, sample):
-        value = super(self.__class__, self).predict(sample)
+        value = super(self.__class__, self).score(sample)
         return 1 if value >= self.threshold else -1
