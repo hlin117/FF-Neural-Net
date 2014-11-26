@@ -10,7 +10,8 @@ def main():
     data."""
     data = np.genfromtxt("output.txt", delimiter=',')
     num_features = data.shape[1] - 1  # Subtract one because of target values
-    nn = ClassifierNeuralNet(num_features, learn_rate=0.5, default_bias=0)
+    nn = ClassifierNeuralNet(num_features, learn_rate=.85, default_bias=0, 
+            stop_error=0.03, initial_scale=8, hidden_layer=[1])
 
 
     print "Starting to train..."
@@ -18,14 +19,17 @@ def main():
     # NOTE: We have to wrap every target value into a vector, for the
     # purpose of being able to classify vectors later.
     nn.train(data[:,:-1], tuple((val,) for val in data[:,-1]))
-    print "Done with training. Took {0} seconds to train.".format(time() - start)
+    print "Done with training. Took {0} seconds to train." \
+            .format(round(time() - start, 2))
 
     print "Beginning with scoring..."
     start = time()
     data = np.genfromtxt("output.txt_features", delimiter=",")
     correct = np.genfromtxt("output.txt_targets", delimiter=",")
     prediction = nn.score_data(data)
-    print "Done with scoring. Took {0} seconds to score the dataset".format(time() - start)
+    print "Done with scoring. Took {0} seconds to score the dataset" \
+            .format(round(time() - start, 2))
+
     print "Total number incorrect: {0}".format(sum(1 for i in \
             xrange(len(correct)) if correct[i] != prediction[i]))
 

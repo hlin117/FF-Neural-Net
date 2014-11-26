@@ -63,7 +63,7 @@ class NeuralNet(object):
         TODO: Extend this neural network to allow for more than one
         hidden layer.
         """
-        aug = 6
+        aug = 10
         rescale = lambda matrix : aug *matrix - aug / 2
         self.weights1 = np.mat(rescale(np.random.rand(self.num_features + 1,
                 self.hidden_layer[0])))
