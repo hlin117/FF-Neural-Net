@@ -6,7 +6,8 @@ class NeuralNet(object):
     """An implementation of a feed forward neural network."""
 
     def __init__(self, num_features, num_output=1, hidden_layer=None, 
-            activation="sigmoid", learn_rate=1, default_bias=0, max_epochs=10):
+            activation="expit", learn_rate=1, default_bias=0, max_epochs=10,
+            scale=1):
         """Constructor for the NeuralNet class.
 
         num_features:   The number of features that each sample has. This will
@@ -14,62 +15,70 @@ class NeuralNet(object):
         num_output:     The number of output labels each sample has. This will
                         equal the number of neurons in the output layer.
         hidden_layer:   A list containing the number of nodes in the (i+1)th 
-                        hidden layer (for i starting at 0).
+                        hidden layer (for i starting at 0). If set to None (default
+                        value), then the neural network will have one hidden
+                        layer with num_features * 1.5 hidden nodes.
         activation:     The default activation function to use in each neuron.
-                        Default is the sigmoid function: s(x) = 1/(1 + e^(-x))
+                        Default is the inverse logistic function: 
+                        s(x) = 1/(1 + e^(-x)). This uses scipy for optimization
+                        purposes.
         learn_rate:     The learning rate applied to the training process. Default
                         value is 1.
         default_bias:   The default weight assigned to the weight vector. Default
                         value is 0.
         max_epochs:     The max number of iterations on the training set. Default
                         value is 10.
+        scale:          Determines the range of random values for the initial
+                        weights of the model. The value of the weights will range
+                        from (-scale, scale). For example, if scale=2, then the
+                        initial weights can range from (-scale, scale). Default
+                        value is 1.
         """
-
-        # NOTE: There is no proven evidence that the ideal number of
-        # nodes in the hidden layer is 1.5, but it is suggested.
-        if hidden_layer is None:
-            hidden_layer = [int(math.floor(num_features * 1.5))]
-
-        # TODO: Address this.
-        if num_output != 1:
-            raise NotImplementedError('Neural network containing more than one \
-                    output label has not been implemented yet.'.replace("\n", ""))
-
-        # TODO: Address this.
-        if len(hidden_layer) > 1:
-            raise NotImplementedError("Neural network containing more than one \
-                    hidden layer has not been implemented yet.".replace("\n", ""))
 
         self.num_features = num_features
         self.num_output = num_output
         self.hidden_layer = hidden_layer
 
+        self.learn_rate = learn_rate
+        self.default_bias = default_bias
+        self.error = lambda x, y : 0.5 * (x - y)**2  # Least means square
+        self.max_epochs = max_epochs
+        self.scale = scale
+
+        # NOTE: There is no proven evidence that the ideal number of
+        # nodes in the hidden layer is 1.5, but it is suggested. Citation needed.
+        if self.hidden_layer is None:
+            num_nodes = int(math.floor(num_features * 1.5))
+            self.hidden_layer = [num_nodes]
+
+        # TODO: Address this.
+        if len(self.hidden_layer) > 1:
+            raise NotImplementedError("Neural network containing more than one \
+                    hidden layer has not been implemented yet.".replace("\n", ""))
+
+        # TODO: Address this.
+        if self.num_output != 1:
+            raise NotImplementedError('Neural network containing more than one \
+                    output label has not been implemented yet.'.replace("\n", ""))
+
         # Assign activation function here, depending on the argument.
-        if activation == "sigmoid":
+        if activation == "expit":
             self.default_act = expit
             self.default_deriv = lambda x : expit(x) * (1 - expit(x))
         else:
             raise NotImplementedError("Neural network that uses a default function \
                     other than the sigmoid function is not yet implemented.")
 
-        # List of the weight matrices here. If w_ij(k) is a weight in the matrix,
-        # it is the weight assigned to the edge from neuron i to neuron j in the
-        # kth layer from the input. (With k = 1, we have the first hidden layer.)
-        self.learn_rate = learn_rate
-        self.default_bias = default_bias
-        self.error = lambda x, y : 0.5 * (x - y)**2  # Least means square
-        self.stop_error = 0.05
         self.init_weights()
 
     def init_weights(self):
         """Initializes the weights on the edges between neurons.
-        Weights are initialized to random values between -1 and 1.
+        Weights are initialized to a random float between (-scale, scale).
         
         TODO: Extend this neural network to allow for more than one
         hidden layer.
         """
-        aug = 10
-        rescale = lambda matrix : aug *matrix - aug / 2
+        rescale = lambda matrix : self.scale *matrix - self.scale / 2
         self.weights1 = np.mat(rescale(np.random.rand(self.num_features + 1,
                 self.hidden_layer[0])))
         self.weights2 = np.mat(rescale(np.random.rand(self.hidden_layer[0] + 1,
