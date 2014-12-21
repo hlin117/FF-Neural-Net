@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import pudb
+from random import shuffle
 from time import time
 from classneuralnet import ClassifierNeuralNet
 import json
@@ -22,6 +22,7 @@ def split(data):
 
 def main():
     table = json.load(open("xor_data.txt"))
+    shuffle(table)
     
     # Using 80% of the data to train, and 20% to test
     fifth = len(table) / 5
@@ -34,7 +35,8 @@ def main():
 
     print "Training neural network on {0} samples".format(len(train_feat))
     start = time()
-    nn = ClassifierNeuralNet(num_features, stop_error=0.03)
+    nn = ClassifierNeuralNet(num_features, verbose=True, scale=0.1,
+                             max_epochs=5)
     nn.train(train_feat, train_targets)
     print "Done training. Took {0} seconds.".format(time() - start)
 
@@ -48,6 +50,7 @@ def main():
             if test_targets[i][0] != predictions[i])
     print "Done testing. Took {0} seconds.".format(time() - start)
     print "Number incorrect: {0}".format(numincorrect)
+
 
 if __name__ == "__main__":
     main()
