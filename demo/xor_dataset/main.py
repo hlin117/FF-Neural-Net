@@ -34,7 +34,7 @@ def main():
 
     print "Training neural network on {0} samples".format(len(train_feat))
     start = time()
-    nn = ClassifierNeuralNet(num_features)
+    nn = ClassifierNeuralNet(num_features, stop_error=0.03)
     nn.train(train_feat, train_targets)
     print "Done training. Took {0} seconds.".format(time() - start)
 
@@ -45,7 +45,7 @@ def main():
     start = time()
     predictions = nn.score_data(test_feat)
     numincorrect = sum(1 for i in xrange(len(test_feat))
-            if test_targets[0][i] != predictions[i])
+            if test_targets[i][0] != predictions[i])
     print "Done testing. Took {0} seconds.".format(time() - start)
     print "Number incorrect: {0}".format(numincorrect)
 

@@ -58,3 +58,4 @@ output.txt
 model/main.py
 model/ipython_log.py
 demo/.gitignore
+neural networks/

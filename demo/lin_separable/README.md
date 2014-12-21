@@ -27,4 +27,6 @@ To generate a complementing testing set, use the following:
 ```bash
 ./../../data/gen_linear.py 5 10 15 200 output.txt --split
 ```
-
+IDEAL PARAMETERS
+================
+TODO: Still trying to search.
