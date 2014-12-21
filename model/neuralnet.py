@@ -6,7 +6,7 @@ class NeuralNet(object):
     """An implementation of a feed forward neural network."""
 
     def __init__(self, num_features, num_output=1, hidden_layer=None, 
-            activation="sigmoid", learn_rate=1, default_bias=0, stop_error=0.05):
+            activation="sigmoid", learn_rate=1, default_bias=0, max_epochs=10):
         """Constructor for the NeuralNet class.
 
         num_features:   The number of features that each sample has. This will
@@ -21,9 +21,8 @@ class NeuralNet(object):
                         value is 1.
         default_bias:   The default weight assigned to the weight vector. Default
                         value is 0.
-        stop_error:     After one iteration of the training process through the
-                        training set, if the error falls below the stop_error value,
-                        the training will stop.
+        max_epochs:     The max number of iterations on the training set. Default
+                        value is 10.
         """
 
         # NOTE: There is no proven evidence that the ideal number of
@@ -112,24 +111,22 @@ class NeuralNet(object):
         large_error = True
         first_pass = True
         min_error = 1
-        while large_error:
+        for i in xrange(max_epochs):
             for i, sample in enumerate(data):
                 outputs = self.feed_forward(sample, all_layers=True)
                 deltas = self.backpropagate(outputs, targets[i])
                 self.update_weights(deltas, outputs)
 
                 # Check whether we should break out
-                error = self.error(outputs[-1][0, 0], targets[i][0])
-                if error < self.stop_error and not first_pass:
-                    large_error = False
-                    break
-            first_pass = False
-
+#                error = self.error(outputs[-1][0, 0], targets[i][0])
+#                if error < self.stop_error and not first_pass:
+#                    large_error = False
+#                    break
 
     def feed_forward(self, sample, all_layers=False):
         """Obtains the output from a feedforward computation.
         
-        NOTE: Still under development. The constructor of the neural
+        TODO: Still under development. The constructor of the neural
         network should prevent any NN with more than one hidden layer
         from being constructed."""
         # Represents the augmented input data
@@ -194,7 +191,6 @@ class NeuralNet(object):
 
     def score_data(self, data):
             """Performs predictions for each of the values stored in data.
-            
             Returns a p-length tuple of predictions for each of the p samples.
             """
             self.verify_data(data)
