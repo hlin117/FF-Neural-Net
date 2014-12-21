@@ -30,7 +30,7 @@ if [ ! -f demo/.gitignore ]; then
 	touch ./demo/.gitignore
 	echo "Created ./demo/.gitignore"
 else
-	echo "./demo/.gitignore detected. run './link reset' to remove files"
+	echo "./demo/.gitignore detected. run './link.sh reset' to remove files"
 	exit 0
 fi
 

@@ -78,7 +78,7 @@ class NeuralNet(object):
         TODO: Extend this neural network to allow for more than one
         hidden layer.
         """
-        rescale = lambda matrix : self.scale *matrix - self.scale / 2
+        rescale = lambda matrix : self.scale * matrix - self.scale / 2
         self.weights1 = np.mat(rescale(np.random.rand(self.num_features + 1,
                 self.hidden_layer[0])))
         self.weights2 = np.mat(rescale(np.random.rand(self.hidden_layer[0] + 1,
@@ -120,7 +120,7 @@ class NeuralNet(object):
         large_error = True
         first_pass = True
         min_error = 1
-        for i in xrange(max_epochs):
+        for i in xrange(self.max_epochs):
             for i, sample in enumerate(data):
                 outputs = self.feed_forward(sample, all_layers=True)
                 deltas = self.backpropagate(outputs, targets[i])

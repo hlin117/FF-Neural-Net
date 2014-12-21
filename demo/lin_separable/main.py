@@ -10,8 +10,7 @@ def main():
     data."""
     data = np.genfromtxt("output.txt", delimiter=',')
     num_features = data.shape[1] - 1  # Subtract one because of target values
-    nn = ClassifierNeuralNet(num_features, learn_rate=.85, default_bias=0, 
-            stop_error=0.03, initial_scale=8, hidden_layer=[1])
+    nn = ClassifierNeuralNet(num_features, learn_rate=.85, scale=0.1)
 
 
     print "Starting to train..."
