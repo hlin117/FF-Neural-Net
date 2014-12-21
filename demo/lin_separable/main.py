@@ -3,23 +3,26 @@ import sys
 from time import time
 import numpy as np
 from classneuralnet import ClassifierNeuralNet
+from random import shuffle
 
 def main():
     """Testing file to show neural network can learn linearly separable
     data."""
-    data = np.genfromtxt("output.txt", delimiter=',')
+    data = np.genfromtxt("output.txt", delimiter=',').tolist()
 
-    num_features = data.shape[1] - 1  # Subtract one because of target values
+    num_features = len(data[0]) - 1  # Subtract one because of target values
     nn = ClassifierNeuralNet(num_features, max_epochs=2,
             learn_rate=.85, scale=0.1, verbose=True)
 
     for i in xrange(10):
+        shuffle(data)
+
+        # NOTE: We have to wrap every target value into a tuple, for the
+        # purpose of being able to classify n-tuples later
+        targets = np.array(tuple((sample[-1],) for sample in data))
+        features = tuple(sample[:-1] for sample in data)
         print "Starting to train..."
         start = time()
-        # NOTE: We have to wrap every target value into a vector, for the
-        # purpose of being able to classify vectors later.
-        targets = tuple((val,) for val in data[:,-1])
-        features = data[:,:-1]
 
         nn.train(features, targets)
         print "Done with training. Took {0} seconds to train." \
