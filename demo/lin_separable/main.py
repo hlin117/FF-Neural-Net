@@ -10,9 +10,6 @@ def main():
     data."""
     data = np.genfromtxt("output.txt", delimiter=',').tolist()
 
-    num_features = len(data[0]) - 1  # Subtract one because of target values
-    nn = ClassifierNeuralNet(num_features, max_epochs=2,
-            learn_rate=.85, scale=0.1, verbose=True)
 
     for i in xrange(10):
         shuffle(data)
@@ -24,6 +21,9 @@ def main():
         print "Starting to train..."
         start = time()
 
+        num_features = len(data[0]) - 1  # Subtract one because of target values
+        nn = ClassifierNeuralNet(num_features, max_epochs=2,
+                learn_rate=.85, scale=0.1, verbose=True)
         nn.train(features, targets)
         print "Done with training. Took {0} seconds to train." \
                 .format(round(time() - start, 2))
