@@ -6,7 +6,7 @@ class NeuralNet(object):
     """An implementation of a feed forward neural network."""
 
     def __init__(self, num_features, num_output=1, hidden_layer=None, 
-            activation="sigmoid", learn_rate=1, default_bias=1):
+            activation="sigmoid", learn_rate=1, default_bias=0, stop_error=0.05):
         """Constructor for the NeuralNet class.
 
         num_features:   The number of features that each sample has. This will
@@ -17,7 +17,13 @@ class NeuralNet(object):
                         hidden layer (for i starting at 0).
         activation:     The default activation function to use in each neuron.
                         Default is the sigmoid function: s(x) = 1/(1 + e^(-x))
-                        TODO: Create a list of the default functions.
+        learn_rate:     The learning rate applied to the training process. Default
+                        value is 1.
+        default_bias:   The default weight assigned to the weight vector. Default
+                        value is 0.
+        stop_error:     After one iteration of the training process through the
+                        training set, if the error falls below the stop_error value,
+                        the training will stop.
         """
 
         # NOTE: There is no proven evidence that the ideal number of
