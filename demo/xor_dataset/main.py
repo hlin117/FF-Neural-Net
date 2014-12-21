@@ -35,8 +35,8 @@ def main():
 
     print "Training neural network on {0} samples".format(len(train_feat))
     start = time()
-    nn = ClassifierNeuralNet(num_features, verbose=True, scale=0.1,
-                             max_epochs=5)
+    nn = ClassifierNeuralNet(num_features, verbose=True, scale=20,
+                             max_epochs=2)
     nn.train(train_feat, train_targets)
     print "Done training. Took {0} seconds.".format(time() - start)
 
