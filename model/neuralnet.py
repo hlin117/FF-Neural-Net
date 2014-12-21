@@ -1,3 +1,4 @@
+from __future__ import print_function
 from scipy.special import expit
 import math
 import numpy as np
@@ -139,7 +140,7 @@ class NeuralNet(object):
 #                    break
     
     def verbose_print(self, string):
-        if self.verbose: print string
+        if self.verbose: print(string)
 
     def feed_forward(self, sample, all_layers=False):
         """Obtains the output from a feedforward computation.
