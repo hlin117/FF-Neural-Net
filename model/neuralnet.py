@@ -7,7 +7,7 @@ class NeuralNet(object):
 
     def __init__(self, num_features, num_output=1, hidden_layer=None, 
             activation="expit", learn_rate=1, default_bias=0, max_epochs=10,
-            scale=1):
+            scale=1, verbose=False):
         """Constructor for the NeuralNet class.
 
         num_features:   The number of features that each sample has. This will
@@ -33,8 +33,11 @@ class NeuralNet(object):
                         from (-scale, scale). For example, if scale=2, then the
                         initial weights can range from (-scale, scale). Default
                         value is 1.
+        verbose:        Used to see how fast the neural network is being trained.
+                        Indicates when an epoch has finished.
         """
 
+        self.verbose = verbose
         self.num_features = num_features
         self.num_output = num_output
         self.hidden_layer = hidden_layer
@@ -96,9 +99,11 @@ class NeuralNet(object):
         """
         for sample in data:
             if len(sample) != self.num_features:
-                raise ValueError("Input data is not of the same length \
+                message = "Input data is not of the same length \
                         as the number of input neurons. Received {0}, not {1} \
-                        ".replace("\n", "").replace("  ", "").format(len(sample), self.num_features))
+                        ".replace("\n", "").replace("  ", "") \
+                        .format(len(sample), self.num_features)
+                raise ValueError(message)
 
             for feature in sample:
                 if not isinstance(feature, (int, float)):
@@ -121,6 +126,7 @@ class NeuralNet(object):
         first_pass = True
         min_error = 1
         for i in xrange(self.max_epochs):
+            self.verbose_print("Starting epoch {0}".format(i + 1))
             for i, sample in enumerate(data):
                 outputs = self.feed_forward(sample, all_layers=True)
                 deltas = self.backpropagate(outputs, targets[i])
@@ -131,6 +137,9 @@ class NeuralNet(object):
 #                if error < self.stop_error and not first_pass:
 #                    large_error = False
 #                    break
+    
+    def verbose_print(self, string):
+        if self.verbose: print string
 
     def feed_forward(self, sample, all_layers=False):
         """Obtains the output from a feedforward computation.
