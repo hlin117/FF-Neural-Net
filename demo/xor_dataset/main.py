@@ -1,4 +1,5 @@
 #!/usr/bin/python
+import math
 from random import shuffle
 from time import time
 from classneuralnet import ClassifierNeuralNet
@@ -24,10 +25,10 @@ def main():
     table = json.load(open("xor_data.txt"))
     shuffle(table)
     
-    # Using 80% of the data to train, and 20% to test
-    fifth = len(table) / 5
-    training = table[:-fifth]
-    testing = table[-fifth:]
+#    # Using 80% of the data to train, and 20% to test
+#    fifth = len(table) / 5
+    training = table
+    testing = table
 
     # Creates and trains the neural network
     train_feat, train_targets = split(training)
@@ -36,7 +37,7 @@ def main():
     print "Training neural network on {0} samples".format(len(train_feat))
     start = time()
     nn = ClassifierNeuralNet(num_features, verbose=True, scale=20,
-                             max_epochs=2)
+                             hidden_layer=[10], max_epochs=5)
     nn.train(train_feat, train_targets)
     print "Done training. Took {0} seconds.".format(time() - start)
 
