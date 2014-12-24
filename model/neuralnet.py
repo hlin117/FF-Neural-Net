@@ -7,8 +7,8 @@ class NeuralNet(object):
     """An implementation of a feed forward neural network."""
 
     def __init__(self, num_features, num_output=1, hidden_layer=None, 
-            activation="expit", learn_rate=1, default_bias=0, max_epochs=10,
-            scale=1, verbose=False):
+                 activation="expit", learn_rate=1, default_bias=0, max_epochs=10,
+                 scale=1, verbose=False):
         """Constructor for the NeuralNet class.
 
         num_features:   The number of features that each sample has. This will
@@ -45,7 +45,7 @@ class NeuralNet(object):
 
         self.learn_rate = learn_rate
         self.default_bias = default_bias
-        self.error = lambda x, y : 0.5 * (x - y)**2  # Least means square
+        self.error = lambda x, y: 0.5 * (x - y)**2  # Least means square
         self.max_epochs = max_epochs
         self.scale = scale
 
@@ -68,7 +68,7 @@ class NeuralNet(object):
         # Assign activation function here, depending on the argument.
         if activation == "expit":
             self.default_act = expit
-            self.default_deriv = lambda x : expit(x) * (1 - expit(x))
+            self.default_deriv = lambda x: expit(x) * (1 - expit(x))
         else:
             raise NotImplementedError("Neural network that uses a default function \
                     other than the sigmoid function is not yet implemented.")
@@ -82,11 +82,11 @@ class NeuralNet(object):
         TODO: Extend this neural network to allow for more than one
         hidden layer.
         """
-        rescale = lambda matrix : self.scale * matrix - self.scale / 2
+        rescale = lambda matrix: self.scale * matrix - self.scale / 2
         self.weights1 = np.mat(rescale(np.random.rand(self.num_features + 1,
-                self.hidden_layer[0])))
+                               self.hidden_layer[0])))
         self.weights2 = np.mat(rescale(np.random.rand(self.hidden_layer[0] + 1,
-                self.num_output)))
+                               self.num_output)))
         self.weights1[-1, :] = self.default_bias
         self.weights2[-1, :] = self.default_bias
 
@@ -123,14 +123,11 @@ class NeuralNet(object):
         at least one, and the error is sufficiently small."""
         self.verify_data(data)
 
-        large_error = True
-        first_pass = True
-        min_error = 1
         for i in xrange(self.max_epochs):
             self.verbose_print("Starting epoch {0}".format(i + 1))
-            for i, sample in enumerate(data):
+            for j, sample in enumerate(data):
                 outputs = self.feed_forward(sample, all_layers=True)
-                deltas = self.backpropagate(outputs, targets[i])
+                deltas = self.backpropagate(outputs, targets[j])
                 self.update_weights(deltas, outputs)
 
                 # Check whether we should break out
@@ -189,15 +186,15 @@ class NeuralNet(object):
 
         # NOTE: Assuming that the output has already been calculated
         # x is an output of the sigmoid function.
-        sig_deriv = np.vectorize(lambda x : x * (1 - x))
+        sig_deriv = np.vectorize(lambda x: x * (1 - x))
         derivs2 = np.diag(sig_deriv(outputs[2]))
 
         # NOTE: The "diag" command only works with nd arrays that are flattened...
-        derivs1 = np.diag(np.asarray(sig_deriv(outputs[1][:,:-1])).flatten())
+        derivs1 = np.diag(np.asarray(sig_deriv(outputs[1][:, :-1])).flatten())
 
         error_deriv = np.mat(np.array(outputs[-1] - targets))
         delta2 = derivs2 * error_deriv
-        delta1 = derivs1 * self.weights2[:-1,:] * delta2
+        delta1 = derivs1 * self.weights2[:-1, :] * delta2
 
         # delta2 and delta1 will be the "correction" that we have to
         # apply to weights2 and weights1
