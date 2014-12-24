@@ -209,11 +209,22 @@ class NeuralNet(object):
         self.weights1 += (-self.learn_rate * deltas[0] * outputs[0]).T
 
     def score_data(self, data):
-            """Performs predictions for each of the values stored in data.
-            Returns a p-length tuple of predictions for each of the p samples.
-            """
-            self.verify_data(data)
-            return tuple(self.score(sample) for sample in data)
-            
+        """Performs predictions for each of the values stored in data.
+        Returns a p-length tuple of predictions for each of the p samples.
+        """
+        self.verify_data(data)
+        return tuple(self.score(sample) for sample in data)
+
+    def classify(self, sample, threshold):
+        """Performs binary classification. TODO: Add option for k-class
+        classification """
+        value = self.score(sample)
+        return 1 if value >= threshold else -1
+
+    def classify_data(self, data, threshold):
+        """Classifies each of the samples. Returns a tuple representing
+        the results of the classification task."""
+        return tuple(self.classify(sample, threshold) for sample in data)
+
     def score(self, sample):
         return self.feed_forward(sample)
