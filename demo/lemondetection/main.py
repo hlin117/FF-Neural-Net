@@ -23,7 +23,7 @@ def main():
     start = time()
 
     num_features = len(data[0]) - 1  # Subtract one because of target values
-    nn = NeuralNet(num_features, max_epochs=2, learn_rate=.85, scale=0.1, 
+    nn = NeuralNet(num_features, max_epochs=10, learn_rate=.85, scale=0.1, 
                    hidden_layer=[7], verbose=True)
     nn.train(features, targets)
 
@@ -43,7 +43,7 @@ def main():
 
     with open("results.txt", "w") as f:
         for pred in predictions:
-            f.write(str(pred) + "\n")
+            f.write(str(pred[0][0]) + "\n")
 
 
 if __name__ == "__main__":
