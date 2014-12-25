@@ -32,7 +32,6 @@ def main():
 
     print "Beginning with scoring..."
     start = time()
-#    testing = np.genfromtxt("testing.csv", delimiter=",")
     
     scored_text = open("testing.csv").read().split("\n")
     testing = list(map(int, sample.strip().split(',')) for sample in scored_text
@@ -42,8 +41,9 @@ def main():
             .format(round(time() - start, 2))
 
     with open("results.txt", "w") as f:
+        f.write("IsBadBuy\n")
         for pred in predictions:
-            f.write(str(pred[0][0]) + "\n")
+            f.write(str(pred[0, 0]) + "\n")
 
 
 if __name__ == "__main__":
