@@ -7,10 +7,11 @@ import numpy as np
 from random import shuffle
 
 def main():
-    """Testing file to show neural network can learn linearly separable
-    data."""
-    print "Reading from the text file..."
-    #data = np.genfromtxt("training.csv", delimiter=',').tolist()
+
+    print "Loading in the data..."
+    text = open("training.csv").read().split("\n")
+    data = list(map(int, sample.strip().split(",")) for sample in text
+                if sample.strip() != "")
     print "Shuffling..."
     shuffle(data)
 
@@ -25,12 +26,17 @@ def main():
     nn = NeuralNet(num_features, max_epochs=2, learn_rate=.85, scale=0.1, 
                    hidden_layer=[7], verbose=True)
     nn.train(features, targets)
+
     print "Done with training. Took {0} seconds to train." \
             .format(round(time() - start, 2))
 
     print "Beginning with scoring..."
     start = time()
-    testing = np.genfromtxt("testing.csv", delimiter=",")
+#    testing = np.genfromtxt("testing.csv", delimiter=",")
+    
+    scored_text = open("testing.csv").read().split("\n")
+    testing = list(map(int, sample.strip().split(',')) for sample in scored_text
+                   if sample.strip() != "")
     predictions = nn.score_data(testing)
     print "Done with scoring. Took {0} seconds to score the dataset" \
             .format(round(time() - start, 2))
