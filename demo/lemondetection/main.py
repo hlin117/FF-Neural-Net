@@ -23,8 +23,8 @@ def main():
     start = time()
 
     num_features = len(data[0]) - 1  # Subtract one because of target values
-    nn = NeuralNet(num_features, max_epochs=10, learn_rate=.85, scale=0.1, 
-                   hidden_layer=[7], verbose=True)
+    nn = NeuralNet(num_features, max_epochs=10, learn_rate=.7, scale=0.1, 
+                   hidden_layer=[3], verbose=True)
     nn.train(features, targets)
 
     print "Done with training. Took {0} seconds to train." \
