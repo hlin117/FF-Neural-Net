@@ -1,6 +1,6 @@
 #!/bin/bash
 
-models=("classneuralnet.py" "neuralnet.py")
+models=("neuralnet.py")
 folders=("lin_separable" "xor_dataset" "lemondetection")
 
 # For the case that we just want to remove all of the generated
