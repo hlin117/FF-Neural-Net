@@ -91,6 +91,7 @@ class NeuralNet(object):
         self.weights1[-1, :] = self.default_bias
         self.weights2[-1, :] = self.default_bias
 
+
     def verify_data(self, data):
         """Verifies that the data is in the form of a nested iterable, and 
         that each is of the length self.num_features. Also verifies that
@@ -226,3 +227,5 @@ class NeuralNet(object):
 
     def score(self, sample):
         return self.feed_forward(sample)
+
+
