@@ -1,7 +1,10 @@
 from __future__ import print_function
+import json
 from scipy.special import expit
 import math
 import numpy as np
+
+one_line = lambda string: string.replace("\n", "").replace("\t", "")
 
 class NeuralNet(object):
     """An implementation of a feed forward neural network."""
@@ -58,23 +61,40 @@ class NeuralNet(object):
 
         # TODO: Address this.
         if len(self.hidden_layer) > 1:
-            raise NotImplementedError("Neural network containing more than one \
-                    hidden layer has not been implemented yet.".replace("\n", ""))
+            raise NotImplementedError(one_line("""Neural network containing 
+            more than one hidden layer has not been implemented yet."""))
 
         # TODO: Address this.
         if self.num_output != 1:
-            raise NotImplementedError('Neural network containing more than one \
-                    output label has not been implemented yet.'.replace("\n", ""))
+            raise NotImplementedError(one_line("""Neural network containing more 
+            than one output label has not been implemented yet."""))
 
         # Assign activation function here, depending on the argument.
         if activation == "expit":
             self.default_act = expit
             self.default_deriv = lambda x: expit(x) * (1 - expit(x))
         else:
-            raise NotImplementedError("Neural network that uses a default function \
-                    other than the sigmoid function is not yet implemented.")
+            raise NotImplementedError(one_line("""Neural network that uses a 
+            default function other than the sigmoid function is not yet 
+            implemented."""))
 
         self.init_weights()
+
+    @classmethod
+    def load(cls, filename):
+        """A method to create a neural network by loading a file in json-format"""
+        json_obj = json.load(open(filename))
+
+        # len(json_obj) + 1 denotes the number of layers in the neural network.
+        if len(json_obj) + 1 != 3:
+            raise NotImplementedError(one_line("""Currently only supporting 
+            neural network with only one hidden layer."""))
+
+        print(len(json_obj[0]))
+        print(len(json_obj[1]))
+
+        raise NotImplementedError(one_line("""Still doing stuff sorry"""))
+
 
     def init_weights(self):
         """Initializes the weights on the edges between neurons.
