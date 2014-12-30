@@ -134,11 +134,11 @@ class NeuralNet(object):
                 
                 raise ValueError(one_line("""Input data is not of the same 
                 length as the number of input neurons. Received {0}, not {1} 
-                """.format(len(sample), self.num_features))
+                """.format(len(sample), self.num_features)))
 
             for feature in sample:
                 if not isinstance(feature, (int, float)):
-                    raise ValueError(one_line("Detected feature that is not 
+                    raise ValueError(one_line("""Detected feature that is not 
                     compatible with the Neural Network: {0}""".format(feature)))
 
     def train(self, data, targets):
@@ -176,8 +176,7 @@ class NeuralNet(object):
         excite1 = input_aug * self.weights1
         output1 = self.default_act(excite1)
 
-        if all_layers:
-            output1_aug = np.mat(np.append(np.array(output1), 1))
+        output1_aug = np.mat(np.append(np.array(output1), 1))
 
         # Calculates the (non-augmented) output of the output layer
         excite2 = output1_aug * self.weights2

@@ -1,9 +1,14 @@
 #!/usr/bin/python
+from __future__ import division
 from time import time
 from neuralnet import NeuralNet
+import numpy as np
+from scipy.special import expit
 
 """Script to test out loading a neural network from a json file"""
 nn = NeuralNet.load("weights2.json")
+#nn.default_act = np.vectorize(lambda x: 2 * expit(x) - 1)
+nn.default_act = np.vectorize(lambda x: (1 - np.exp(-x)) / (1 + np.exp(-x)))
 
 print "Beginning with scoring..."
 start = time()
@@ -18,5 +23,7 @@ print "Done with scoring. Took {0} seconds to score the dataset" \
 with open("results.txt", "w") as f:
     f.write("IsBadBuy\n")
     for pred in predictions:
-        f.write(str(pred[0, 0]) + "\n")
+        if pred[0, 0] < 0:
+            f.write(str(0) + "\n")
+        else: f.write(str(pred[0, 0]) + "\n")
 
