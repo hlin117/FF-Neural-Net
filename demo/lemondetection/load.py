@@ -3,7 +3,7 @@ from time import time
 from neuralnet import NeuralNet
 
 """Script to test out loading a neural network from a json file"""
-nn = NeuralNet.load("weights.json")
+nn = NeuralNet.load("weights2.json")
 
 print "Beginning with scoring..."
 start = time()
