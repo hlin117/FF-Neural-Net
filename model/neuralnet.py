@@ -90,11 +90,14 @@ class NeuralNet(object):
             raise NotImplementedError(one_line("""Currently only supporting 
             neural network with only one hidden layer."""))
 
-        print(len(json_obj[0]))
-        print(len(json_obj[1]))
+        weights1 = np.mat(json_obj[0]).T
+        weights2 = np.mat(json_obj[1]).T
 
-        raise NotImplementedError(one_line("""Still doing stuff sorry"""))
-
+        nn = cls(weights1.shape[0] - 1, hidden_layer=[weights1.shape[1]])
+        nn.weights1 = weights1
+        nn.weights2 = weights2
+        return nn
+        
 
     def init_weights(self):
         """Initializes the weights on the edges between neurons.
