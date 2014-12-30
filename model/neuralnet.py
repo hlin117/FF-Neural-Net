@@ -72,11 +72,17 @@ class NeuralNet(object):
         # Assign activation function here, depending on the argument.
         if activation == "expit":
             self.default_act = expit
-            self.default_deriv = lambda x: expit(x) * (1 - expit(x))
+            self.default_deriv = np.vectorize(lambda x: x * (1 - x))
+
+            # NOTE: Setting the derivative is useless here...
+            #self.default_deriv = lambda x: expit(x) * (1 - expit(x))
+        elif activation == "tanh":
+            self.default_act = np.vectorize(lambda x: 2 * expit(x) - 1)
+            self.default_deriv = np.vectorize(lambda x: 2 * x * (1 - x))
+
         else:
-            raise NotImplementedError(one_line("""Neural network that uses a 
-            default function other than the sigmoid function is not yet 
-            implemented."""))
+            raise NotImplementedError(one_line("""Activation function not 
+            supported yet: {0}""".format(activation)))
 
         self.init_weights()
 
@@ -169,7 +175,9 @@ class NeuralNet(object):
         # Calculates the augmented output of the hidden layer
         excite1 = input_aug * self.weights1
         output1 = self.default_act(excite1)
-        output1_aug = np.mat(np.append(np.array(output1), 1))
+
+        if all_layers:
+            output1_aug = np.mat(np.append(np.array(output1), 1))
 
         # Calculates the (non-augmented) output of the output layer
         excite2 = output1_aug * self.weights2
@@ -204,11 +212,11 @@ class NeuralNet(object):
 
         # NOTE: Assuming that the output has already been calculated
         # x is an output of the sigmoid function.
-        sig_deriv = np.vectorize(lambda x: x * (1 - x))
-        derivs2 = np.diag(sig_deriv(outputs[2]))
+        #sig_deriv = np.vectorize(lambda x: x * (1 - x))
+        derivs2 = np.diag(self.default_deriv(outputs[2]))
 
         # NOTE: The "diag" command only works with nd arrays that are flattened...
-        derivs1 = np.diag(np.asarray(sig_deriv(outputs[1][:, :-1])).flatten())
+        derivs1 = np.diag(np.asarray(self.default_deriv(outputs[1][:, :-1])).flatten())
 
         error_deriv = np.mat(np.array(outputs[-1] - targets))
         delta2 = derivs2 * error_deriv
