@@ -48,7 +48,7 @@ class NeuralNet(object):
 
         self.learn_rate = learn_rate
         self.default_bias = default_bias
-        self.error = lambda x, y: 0.5 * (x - y)**2  # Least means square
+        #self.error = lambda x, y: 0.5 * (x - y)**2  # Least means square
 
         self.max_epochs = max_epochs
         self.scale = scale

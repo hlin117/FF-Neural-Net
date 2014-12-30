@@ -36,8 +36,8 @@ def main():
 
     print "Training neural network on {0} samples".format(len(train_feat))
     start = time()
-    nn = ClassifierNeuralNet(num_features, verbose=True, scale=20,
-                             hidden_layer=[10], max_epochs=5)
+    nn = NeuralNet(num_features, verbose=True, scale=20, hidden_layer=[10], 
+                   max_epochs=5, activation="tanh")
     nn.train(train_feat, train_targets)
     print "Done training. Took {0} seconds.".format(time() - start)
 
@@ -46,7 +46,7 @@ def main():
 
     print "Testing the neural network on {0} samples".format(len(test_feat))
     start = time()
-    predictions = nn.score_data(test_feat)
+    predictions = nn.classify_data(test_feat)
     numincorrect = sum(1 for i in xrange(len(test_feat))
             if test_targets[i][0] != predictions[i])
     print "Done testing. Took {0} seconds.".format(time() - start)
