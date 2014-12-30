@@ -1,7 +1,7 @@
 #!/bin/bash
 
 models=("neuralnet.py")
-folders=("lin_separable" "xor_dataset" "lemondetection")
+folders=("lin_separable" "xor_dataset" "lemondetection" "load_NN")
 
 # For the case that we just want to remove all of the generated
 # links and the .gitignore
