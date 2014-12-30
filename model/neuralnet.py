@@ -125,16 +125,15 @@ class NeuralNet(object):
         """
         for sample in data:
             if len(sample) != self.num_features:
-                message = "Input data is not of the same length \
-                        as the number of input neurons. Received {0}, not {1} \
-                        ".replace("\n", "").replace("  ", "") \
-                        .format(len(sample), self.num_features)
-                raise ValueError(message)
+                
+                raise ValueError(one_line("""Input data is not of the same 
+                length as the number of input neurons. Received {0}, not {1} 
+                """.format(len(sample), self.num_features))
 
             for feature in sample:
                 if not isinstance(feature, (int, float)):
-                    raise ValueError("Detected feature that is not compatible \
-                            with the Neural Network: {0}".replace("\n", "").format(feature))
+                    raise ValueError(one_line("Detected feature that is not 
+                    compatible with the Neural Network: {0}""".format(feature)))
 
     def train(self, data, targets):
         """Trains the neural network on a set of data. Data should be
@@ -155,12 +154,6 @@ class NeuralNet(object):
                 deltas = self.backpropagate(outputs, targets[j])
                 self.update_weights(deltas, outputs)
 
-                # Check whether we should break out
-#                error = self.error(outputs[-1][0, 0], targets[i][0])
-#                if error < self.stop_error and not first_pass:
-#                    large_error = False
-#                    break
-    
     def verbose_print(self, string):
         if self.verbose: print(string)
 
