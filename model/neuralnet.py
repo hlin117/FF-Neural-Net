@@ -1,5 +1,6 @@
-from __future__ import print_function
+from __future__ import print_function, division
 import json
+from scipy.stats import logistic
 from scipy.special import expit
 import math
 import numpy as np
@@ -10,8 +11,8 @@ class NeuralNet(object):
     """An implementation of a feed forward neural network."""
 
     def __init__(self, num_features, num_output=1, hidden_layer=None, 
-                 activation="expit", learn_rate=1, default_bias=0, max_epochs=10,
-                 scale=1, verbose=False):
+                 activation=("expit", 1), learn_rate=1, default_bias=0, 
+                 max_epochs=10, scale=1, verbose=False, temperature=1):
         """Constructor for the NeuralNet class.
 
         num_features:   The number of features that each sample has. This will
@@ -23,9 +24,10 @@ class NeuralNet(object):
                         value), then the neural network will have one hidden
                         layer with num_features * 1.5 hidden nodes.
         activation:     The default activation function to use in each neuron.
-                        Default is the inverse logistic function: 
-                        s(x) = 1/(1 + e^(-x)). This uses scipy for optimization
-                        purposes.
+                        Default is the inverse logistic function with 
+                        temperature = 1:
+                        s(x) = 1/(1 + e^(-x)). 
+                        This uses scipy for optimization purposes.
         learn_rate:     The learning rate applied to the training process. Default
                         value is 1.
         default_bias:   The default weight assigned to the weight vector. Default
@@ -70,14 +72,19 @@ class NeuralNet(object):
             than one output label has not been implemented yet."""))
 
         # Assign activation function here, depending on the argument.
-        if activation == "expit":
-            self.default_act = expit
-            self.default_deriv = np.vectorize(lambda x: x * (1 - x))
+        if activation[0] == "expit":
+            temp = activation[1]
 
-            # NOTE: Setting the derivative is useless here...
-            #self.default_deriv = lambda x: expit(x) * (1 - expit(x))
-        elif activation == "tanh":
-            self.default_act = np.vectorize(lambda x: 2 * expit(x) - 1)
+            # This is just an optimization using scipy
+            if temp == 1:
+                self.default_act = expit
+                self.default_deriv = np.vectorize(lambda x: x * (1 - x))
+            else:
+                self.default_act = lambda x: logistic.cdf(x, scale=temp)
+                self.default_deriv = np.vectorize(lambda x: temp * x * (1 - x))
+
+        elif activation[0] == "tanh":
+            self.default_act = lambda x: 2 * expit(x) - 1
             self.default_deriv = np.vectorize(lambda x: 2 * x * (1 - x))
 
         else:
@@ -211,7 +218,6 @@ class NeuralNet(object):
 
         # NOTE: Assuming that the output has already been calculated
         # x is an output of the sigmoid function.
-        #sig_deriv = np.vectorize(lambda x: x * (1 - x))
         derivs2 = np.diag(self.default_deriv(outputs[2]))
 
         # NOTE: The "diag" command only works with nd arrays that are flattened...
