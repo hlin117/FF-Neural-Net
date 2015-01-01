@@ -24,7 +24,7 @@ def main():
 
     num_features = len(data[0]) - 1  # Subtract one because of target values
     nn = NeuralNet(num_features, max_epochs=20, learn_rate=.7, scale=0.1, 
-                   hidden_layer=[4], verbose=True, activation="tanh")
+                   hidden_layer=[4], verbose=True, activation=("expit", 2))
     nn.train(features, targets)
 
     print "Done with training. Took {0} seconds to train." \

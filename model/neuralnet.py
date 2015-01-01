@@ -5,7 +5,7 @@ from scipy.special import expit
 import math
 import numpy as np
 
-one_line = lambda string: string.replace("\n", "").replace("\t", "")
+one_line = lambda string: string.replace("\n", "").replace("  ", "")
 
 class NeuralNet(object):
     """An implementation of a feed forward neural network."""
