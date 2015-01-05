@@ -1,6 +1,5 @@
 #!/usr/bin/python
 from __future__ import division
-from time import time
 from neuralnet import NeuralNet
 import numpy as np
 from scipy.special import expit
@@ -14,4 +13,4 @@ data = np.genfromtxt("small_training.csv", delimiter=',').tolist()
 targets = np.array(tuple((sample[-1],) for sample in data))
 features = tuple(sample[:-1] for sample in data)
 
-
+nn.train(features, targets)

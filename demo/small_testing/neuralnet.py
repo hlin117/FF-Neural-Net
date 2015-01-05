@@ -164,10 +164,17 @@ class NeuralNet(object):
 
         for i in xrange(self.max_epochs):
             self.verbose_print("Starting epoch {0}".format(i + 1))
+            change1 = np.mat(np.zeros(self.weights1.shape))
+            change2 = np.mat(np.zeros(self.weights2.shape))
             for j, sample in enumerate(data):
                 outputs = self.feed_forward(sample, all_layers=True)
                 deltas = self.backpropagate(outputs, targets[j])
-                self.update_weights(deltas, outputs)
+
+                change1 += (-self.learn_rate * deltas[0] * outputs[0]).T
+                change2 += (-self.learn_rate * deltas[1] * outputs[1]).T
+            
+            self.weights1 += change1
+            self.weights2 += change2
 
     def verbose_print(self, string):
         if self.verbose: print(string)
