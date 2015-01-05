@@ -2,7 +2,6 @@
 import sys
 from time import time
 import numpy as np
-from classneuralnet import ClassifierNeuralNet
 from random import shuffle
 
 def main():
@@ -22,7 +21,7 @@ def main():
         start = time()
 
         num_features = len(data[0]) - 1  # Subtract one because of target values
-        nn = ClassifierNeuralNet(num_features, max_epochs=2,
+        nn = NeuralNet(num_features, max_epochs=2,
                 learn_rate=.85, scale=0.1, verbose=True)
         nn.train(features, targets)
         print "Done with training. Took {0} seconds to train." \
