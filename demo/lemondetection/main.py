@@ -9,7 +9,7 @@ from random import shuffle
 def main():
 
     print "Loading in the data..."
-    text = open("training.csv").read().split("\n")
+    text = open("small_training.csv").read().split("\n")
     data = list(map(int, sample.strip().split(",")) for sample in text
                 if sample.strip() != "")
     print "Shuffling..."
