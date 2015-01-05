@@ -9,7 +9,7 @@ from random import shuffle
 def main():
 
     print "Loading in the data..."
-    text = open("small_training.csv").read().split("\n")
+    text = open("training.csv").read().split("\n")
     data = list(map(int, sample.strip().split(",")) for sample in text
                 if sample.strip() != "")
     print "Shuffling..."
@@ -24,7 +24,7 @@ def main():
 
     num_features = len(data[0]) - 1  # Subtract one because of target values
     nn = NeuralNet(num_features, max_epochs=20, learn_rate=.7, scale=0.1, 
-                   hidden_layer=[4], verbose=True, activation=("expit", 2))
+                   hidden_layer=[4], verbose=True, activation=("tanh", 1))
     nn.train(features, targets)
 
     print "Done with training. Took {0} seconds to train." \
