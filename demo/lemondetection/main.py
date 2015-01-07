@@ -17,13 +17,14 @@ def main():
 
     # NOTE: We have to wrap every target value into a tuple, for the
     # purpose of being able to classify n-tuples later
-    targets = np.array(tuple((sample[-1],) for sample in data))
+    targets = np.array(tuple((1 if sample[-1] == 1 else 0,) for sample in data))
     features = tuple(sample[:-1] for sample in data)
     print "Starting to train..."
     start = time()
 
     num_features = len(data[0]) - 1  # Subtract one because of target values
-    nn = NeuralNet(num_features, max_epochs=5, learn_rate=.7, scale=0.1, 
+
+    nn = NeuralNet(num_features, max_epochs=2, learn_rate=.7, scale=0.1, 
                    hidden_layer=[4], verbose=True, activation=("tanh", 1))
     nn.train(features, targets)
 
