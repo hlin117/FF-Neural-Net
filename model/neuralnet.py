@@ -173,8 +173,8 @@ class NeuralNet(object):
                 change1 += (-self.learn_rate * deltas[0] * outputs[0]).T
                 change2 += (-self.learn_rate * deltas[1] * outputs[1]).T
             
-            self.weights1 += change1
-            self.weights2 += change2
+            self.weights1 += change1 / len(data)
+            self.weights2 += change2 / len(data)
 
     def verbose_print(self, string):
         if self.verbose: print(string)
@@ -240,10 +240,10 @@ class NeuralNet(object):
         # apply to weights2 and weights1
         return delta1, delta2
 
-    def update_weights(self, deltas, outputs):
-        """Updates the weights of the edges."""
-        self.weights2 += (-self.learn_rate * deltas[1] * outputs[1]).T
-        self.weights1 += (-self.learn_rate * deltas[0] * outputs[0]).T
+#    def update_weights(self, deltas, outputs):
+#        """Updates the weights of the edges."""
+#        self.weights2 += (-self.learn_rate * deltas[1] * outputs[1]).T
+#        self.weights1 += (-self.learn_rate * deltas[0] * outputs[0]).T
 
     def score_data(self, data):
         """Performs predictions for each of the values stored in data.
