@@ -7,8 +7,7 @@ from scipy.special import expit
 
 """Script to test out loading a neural network from a json file"""
 nn = NeuralNet.load("weights2.json")
-#nn.default_act = np.vectorize(lambda x: 2 * expit(x) - 1)
-nn.default_act = np.vectorize(lambda x: (1 - np.exp(-x)) / (1 + np.exp(-x)))
+nn.default_act = np.vectorize(lambda x: (1 - np.exp(-2*x)) / (1 + np.exp(-2*x)))
 
 print "Beginning with scoring..."
 start = time()

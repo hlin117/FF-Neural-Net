@@ -65,6 +65,7 @@ for folder in "${folders[@]}"; do
 		echo $folder/$model >> demo/.gitignore
 	done
 done
+echo *.csv >> demo/.gitignore
 
 echo "Done linking. The neural network is ready to be demo-ed."
 echo "Appropriate files have been added to /demo/.gitignore."
