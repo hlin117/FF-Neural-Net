@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ ! -f link.sh ]; then
+    echo "Error: Cannot execute if shell is not in the same directory as script"
+    exit 0
+fi
+
 models=("neuralnet.py")
 folders=("lin_separable" "xor_dataset" "lemondetection" "load_NN" "small_testing")
 
