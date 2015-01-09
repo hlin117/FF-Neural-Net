@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ ! -f link.sh ]; then
+    echo "Error: Cannot execute if shell is not in the same directory as script"
+    exit 0
+fi
+
 models=("neuralnet.py")
 folders=("lin_separable" "xor_dataset" "lemondetection" "load_NN" "small_testing")
 
@@ -7,20 +12,34 @@ folders=("lin_separable" "xor_dataset" "lemondetection" "load_NN" "small_testing
 # links and the .gitignore
 if [ "$1" = "reset" ]; then
 
-	if [ -f demo/.gitignore ]; then
-		rm demo/.gitignore
-	fi
-
+    
 	for folder in "${folders[@]}"; do
 		for model in "${models[@]}"; do
-			if [ -f demo/$folder/$model ]; then
-				rm demo/$folder/$model
+            file1=demo/$folder/$model
+            file2=model/$model
+			if [ -f $file1 ]; then
+
+                hash1=`md5 $file1`
+                hash2=`md5 $file2`
+
+                if [ "$hash1" = "$hash2" ]
+                then
+                    echo "Files have NOT the same content. Will not remove."
+                    exit 0
+                fi
+
+				rm $file1
 			else
 				echo "Couldn't find file demo/$folder/$model"
 			fi
 		done
 
 	done
+
+	if [ -f demo/.gitignore ]; then
+		rm demo/.gitignore
+	fi
+
 	echo "Removed ./demo/.gitignore and other links"
 	exit 0
 fi
