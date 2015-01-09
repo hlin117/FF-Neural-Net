@@ -20,7 +20,7 @@ Resources
 	<li> <a href="http://stats.stackexchange.com/questions/181/how-to-choose-the-number-of-hidden-layers-and-nodes-in-a-feedforward-neural-netw">
 	Cross Validated - How to choose the number of hidden layers and nodes in a feedforward neural network?</a></li>
 
-	<li> <a href="http://neuralnetworksanddeeplearning.com/chap2.html">Back Propogation </a></li>
+	<li> <a href="http://neuralnetworksanddeeplearning.com/chap2.html">Back Propogation by Michael Nielsen</a></li>
 
 </ul>
 
