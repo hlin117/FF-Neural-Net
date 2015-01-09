@@ -15,20 +15,19 @@ if [ "$1" = "reset" ]; then
     
 	for folder in "${folders[@]}"; do
 		for model in "${models[@]}"; do
-            file1=demo/$folder/$model
-            file2=model/$model
-			if [ -f $file1 ]; then
-
-                hash1=`md5 $file1`
-                hash2=`md5 $file2`
-
-                if [ "$hash1" = "$hash2" ]
-                then
-                    echo "Files have NOT the same content. Will not remove."
+            linked_file=demo/$folder/$model
+            model_file=model/$model
+			if [ -f $linked_file ]; then
+                
+                diff=`diff $linked_file $model_file`
+                if [ "$diff" != "" -a "$2" != "force" ] ; then
+                    echo "File $linked_file is not the same, aborting."
+                    echo "Difference"
+                    echo $diff
                     exit 0
                 fi
 
-				rm $file1
+				rm $linked_file
 			else
 				echo "Couldn't find file demo/$folder/$model"
 			fi
