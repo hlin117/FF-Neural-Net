@@ -83,11 +83,11 @@ class NeuralNet(object):
                 self.default_act = lambda x: logistic.cdf(x, scale=temp)
                 self.default_deriv = np.vectorize(lambda x: temp * x * (1 - x))
 
-        elif activation[0] == "tanh":
-            if activation[1] != 1: print(one_line("""Warning: other temperatures
-            for the tanh activation function have not been implemented."""))
-            self.default_act = lambda x: 2 * expit(x) - 1
-            self.default_deriv = np.vectorize(lambda x: 2 * x * (1 - x))
+#        elif activation[0] == "tanh":
+#            if activation[1] != 1: print(one_line("""Warning: other temperatures
+#            for the tanh activation function have not been implemented."""))
+#            self.default_act = lambda x: 2 * expit(x) - 1
+#            self.default_deriv = np.vectorize(lambda x: 2 * x * (1 - x))
 
         else:
             raise NotImplementedError(one_line("""Activation function not 
@@ -149,6 +149,7 @@ class NeuralNet(object):
                 if not isinstance(feature, (int, float)):
                     raise ValueError(one_line("""Detected feature that is not 
                     compatible with the Neural Network: {0}""".format(feature)))
+
 
     def train(self, data, targets):
         """Trains the neural network on a set of data. Data should be
@@ -228,12 +229,11 @@ class NeuralNet(object):
         # NOTE: Assuming that the output has already been calculated
         # x is an output of the sigmoid function.
         derivs2 = np.diag(self.default_deriv(outputs[2]))
+        error_deriv = np.mat(np.array(outputs[-1] - targets))  # TODO: Generalize this line for other error functs
+        delta2 = derivs2 * error_deriv
 
         # NOTE: The "diag" command only works with nd arrays that are flattened...
         derivs1 = np.diag(np.asarray(self.default_deriv(outputs[1][:, :-1])).flatten())
-
-        error_deriv = np.mat(np.array(outputs[-1] - targets))
-        delta2 = derivs2 * error_deriv
         delta1 = derivs1 * self.weights2[:-1, :] * delta2
 
         # delta2 and delta1 will be the "correction" that we have to
