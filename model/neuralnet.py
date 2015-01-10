@@ -11,7 +11,7 @@ class NeuralNet(object):
     """An implementation of a feed forward neural network."""
 
     def __init__(self, num_features, num_output=1, hidden_layer=None, 
-                 activation=("expit", 1), learn_rate=1, default_bias=0, 
+                 activation=("expit", 1), learn_rate=1, default_bias="random", 
                  max_epochs=10, scale=1, verbose=False, temperature=1):
         """Constructor for the NeuralNet class.
 
@@ -31,7 +31,7 @@ class NeuralNet(object):
         learn_rate:     The learning rate applied to the training process. Default
                         value is 1.
         default_bias:   The default weight assigned to the weight vector. Default
-                        value is 0.
+                        value is random, uniformly between (-scale, scale).
         max_epochs:     The max number of iterations on the training set. Default
                         value is 10.
         scale:          Determines the range of random values for the initial
@@ -126,8 +126,9 @@ class NeuralNet(object):
                                self.hidden_layer[0])))
         self.weights2 = np.mat(rescale(np.random.rand(self.hidden_layer[0] + 1,
                                self.num_output)))
-        self.weights1[-1, :] = self.default_bias
-        self.weights2[-1, :] = self.default_bias
+        if self.default_bias != "random":
+            self.weights1[-1, :] = self.default_bias
+            self.weights2[-1, :] = self.default_bias
 
 
     def verify_data(self, data):
