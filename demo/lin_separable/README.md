@@ -15,7 +15,7 @@ this project:
 The script to create testing data is located in the project's
 data folder. To generate a training file here, use the following:
 ```bash
-./data/gen_linear.py 5 10 15 20000 data
+./data/gen_linear.py 5 10 15 20000 training
 ```
 
 This will create a file called `data` in this directory,
@@ -25,7 +25,7 @@ each sample containing 20 features. This dataset will contain
 
 To generate a complementing testing set, use the following:
 ```bash
-./data/gen_linear.py 5 10 15 200 data --split
+./data/gen_linear.py 5 10 15 200 testing --split
 ```
 IDEAL PARAMETERS
 ================

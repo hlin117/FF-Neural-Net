@@ -7,7 +7,7 @@ from random import shuffle
 def main():
 
     print "Loading in the data..."
-    text = open("small.csv").read().split("\n")
+    text = open("data/lemon_training.csv").read().split("\n")
     data = list(map(int, sample.strip().split(",")) for sample in text
                 if sample.strip() != "")
     print "Shuffling..."
