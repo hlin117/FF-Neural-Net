@@ -34,10 +34,6 @@ if [ "$1" = "reset" ]; then
 			fi
 		done
 
-        data_folder = demo/$folder/data
-        if [ ! -d "$data_folder" ]; then
-            ln -s data $data_folder 
-        fi
 
 	done
 
@@ -68,10 +64,18 @@ for folder in "${folders[@]}"; do
 			continue
 		fi
 		ln model/$model demo/$folder/$model
-		echo $folder/$model >> demo/.gitignore
+        echo $folder/$model >> demo/.gitignore
 	done
+
+    if [ ! -L "demo/$folder/data" ]; then
+        ln -s data "demo/$folder/data"
+    fi
+
 done
+
+# Ignored files
 echo *.csv >> demo/.gitignore
+echo data >> demo/.gitignore
 
 echo "Done linking. The neural network is ready to be demo-ed."
 echo "Appropriate files have been added to /demo/.gitignore."
