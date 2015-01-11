@@ -34,10 +34,6 @@ if [ "$1" = "reset" ]; then
 			fi
 		done
 
-        data_folder = demo/$folder/data
-        if [ ! -d "$data_folder" ]; then
-            ln -s data $data_folder 
-        fi
 
 	done
 
