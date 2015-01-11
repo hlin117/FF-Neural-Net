@@ -17,8 +17,9 @@ if [ "$1" = "reset" ]; then
 		for model in "${models[@]}"; do
             linked_file=demo/$folder/$model
             model_file=model/$model
+
+            # Executes only if the file exists
 			if [ -f $linked_file ]; then
-                
                 diff=`diff $linked_file $model_file`
                 if [ "$diff" != "" -a "$2" != "force" ] ; then
                     echo "File $linked_file is not the same, aborting."
@@ -32,6 +33,11 @@ if [ "$1" = "reset" ]; then
 				echo "Couldn't find file demo/$folder/$model"
 			fi
 		done
+
+        data_folder = demo/$folder/data
+        if [ ! -d "$data_folder" ]; then
+            ln -s data $data_folder 
+        fi
 
 	done
 
