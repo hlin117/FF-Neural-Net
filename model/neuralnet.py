@@ -12,7 +12,8 @@ class NeuralNet(object):
 
     def __init__(self, num_features, num_output=1, hidden_layer=None, 
                  activation=("expit", 1), learn_rate=1, default_bias="random", 
-                 max_epochs=10, scale=1, verbose=False, temperature=1):
+                 max_epochs=10, scale=1, verbose=False, temperature=1,
+                 online=True):
         """Constructor for the NeuralNet class.
 
         num_features:   The number of features that each sample has. This will
@@ -41,6 +42,8 @@ class NeuralNet(object):
                         value is 1.
         verbose:        Used to see how fast the neural network is being trained.
                         Indicates when an epoch has finished.
+        online:         Indicates that the weights should be updated
+                        for every training example.
         """
 
         self.verbose = verbose
@@ -50,10 +53,11 @@ class NeuralNet(object):
 
         self.learn_rate = learn_rate
         self.default_bias = default_bias
-        #self.error = lambda x, y: 0.5 * (x - y)**2  # Least means square
 
         self.max_epochs = max_epochs
         self.scale = scale
+
+        self.online = online
 
         # NOTE: There is no proven evidence that the ideal number of
         # nodes in the hidden layer is 1.5, but it is suggested. Citation needed.
@@ -166,17 +170,26 @@ class NeuralNet(object):
 
         for i in xrange(self.max_epochs):
             self.verbose_print("Starting epoch {0}".format(i + 1))
-            change1 = np.mat(np.zeros(self.weights1.shape))
-            change2 = np.mat(np.zeros(self.weights2.shape))
+
+            if not self.online:
+                change1 = np.mat(np.zeros(self.weights1.shape))
+                change2 = np.mat(np.zeros(self.weights2.shape))
+
             for j, sample in enumerate(data):
                 outputs = self.feed_forward(sample, all_layers=True)
                 deltas = self.backpropagate(outputs, targets[j])
 
-                change1 += (-self.learn_rate * deltas[0] * outputs[0]).T
-                change2 += (-self.learn_rate * deltas[1] * outputs[1]).T
+                if self.online:
+                    self.weights1 += (-self.learn_rate * deltas[0] * outputs[0]).T
+                    self.weights2 += (-self.learn_rate * deltas[1] * outputs[1]).T
+                else:
+                    change1 += (-self.learn_rate * deltas[0] * outputs[0]).T
+                    change2 += (-self.learn_rate * deltas[1] * outputs[1]).T
+            if not self.online:
+                self.weights1 += change1
+                self.weights2 += change2
+
             
-            self.weights1 += change1 / len(data)
-            self.weights2 += change2 / len(data)
 
     def verbose_print(self, string):
         if self.verbose: print(string)
