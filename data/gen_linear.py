@@ -93,7 +93,7 @@ def main():
         np.savetxt(args.file + "_features.csv", samples, delimiter=",", fmt="%.0f")
         np.savetxt(args.file + "_targets.csv", targets, delimiter=",", fmt="%.0f")
     else:
-        np.savetxt(args.file, np.hstack((samples, targets)), delimiter=",", fmt="%.0f")
+        np.savetxt(args.file + ".csv", np.hstack((samples, targets)), delimiter=",", fmt="%.0f")
 
 if __name__ == "__main__":
     main()
