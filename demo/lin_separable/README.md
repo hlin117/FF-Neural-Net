@@ -10,7 +10,7 @@ Set up
 If you haven't already, run the following script in the root of
 this project:
 ```bash
-./link
+./link.sh
 ```
 The script to create testing data is located in the project's
 data folder. To generate a training file here, use the following:

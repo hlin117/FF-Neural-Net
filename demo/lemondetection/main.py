@@ -7,7 +7,7 @@ from random import shuffle
 def main():
 
     print "Loading in the data..."
-    text = open("training.csv").read().split("\n")
+    text = open("small.csv").read().split("\n")
     data = list(map(int, sample.strip().split(",")) for sample in text
                 if sample.strip() != "")
     print "Shuffling..."
@@ -31,7 +31,7 @@ def main():
     print "Beginning with scoring..."
     start = time()
     
-    scored_text = open("testing.csv").read().split("\n")
+    scored_text = open("data/lemon_testing.csv").read().split("\n")
     testing = list(map(int, sample.strip().split(',')) for sample in scored_text
                    if sample.strip() != "")
     predictions = nn.score_data(testing)
