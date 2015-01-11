@@ -17,8 +17,9 @@ if [ "$1" = "reset" ]; then
 		for model in "${models[@]}"; do
             linked_file=demo/$folder/$model
             model_file=model/$model
+
+            # Executes only if the file exists
 			if [ -f $linked_file ]; then
-                
                 diff=`diff $linked_file $model_file`
                 if [ "$diff" != "" -a "$2" != "force" ] ; then
                     echo "File $linked_file is not the same, aborting."
@@ -32,6 +33,7 @@ if [ "$1" = "reset" ]; then
 				echo "Couldn't find file demo/$folder/$model"
 			fi
 		done
+
 
 	done
 
@@ -62,10 +64,18 @@ for folder in "${folders[@]}"; do
 			continue
 		fi
 		ln model/$model demo/$folder/$model
-		echo $folder/$model >> demo/.gitignore
+        echo $folder/$model >> demo/.gitignore
 	done
+
+    if [ ! -L "demo/$folder/data" ]; then
+        ln -s data "demo/$folder/data"
+    fi
+
 done
+
+# Ignored files
 echo *.csv >> demo/.gitignore
+echo data >> demo/.gitignore
 
 echo "Done linking. The neural network is ready to be demo-ed."
 echo "Appropriate files have been added to /demo/.gitignore."

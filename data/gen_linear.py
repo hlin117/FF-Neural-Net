@@ -90,8 +90,8 @@ def main():
     args = parse_args()
     samples, targets = generate(args.l, args.m, args.n, args.numInstances)
     if args.split:
-        np.savetxt(args.file + "_features", samples, delimiter=",", fmt="%.0f")
-        np.savetxt(args.file + "_targets", targets, delimiter=",", fmt="%.0f")
+        np.savetxt(args.file + "_features.csv", samples, delimiter=",", fmt="%.0f")
+        np.savetxt(args.file + "_targets.csv", targets, delimiter=",", fmt="%.0f")
     else:
         np.savetxt(args.file, np.hstack((samples, targets)), delimiter=",", fmt="%.0f")
 
