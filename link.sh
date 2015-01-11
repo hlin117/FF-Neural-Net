@@ -6,7 +6,7 @@ if [ ! -f link.sh ]; then
 fi
 
 models=("neuralnet.py")
-folders=("lin_separable" "xor_dataset" "lemondetection" "load_NN" "small_testing")
+folders=("lin_separable" "lemondetection" "load_NN")
 
 # For the case that we just want to remove all of the generated
 # links and the .gitignore

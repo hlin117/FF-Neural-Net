@@ -60,3 +60,4 @@ model/ipython_log.py
 demo/.gitignore
 neural networks/
 nielsen
+demo/xor_dataset
