@@ -20,13 +20,13 @@ if [ "$1" = "reset" ]; then
 
             # Executes only if the file exists
 			if [ -f $linked_file ]; then
-                diff=`diff $linked_file $model_file`
-                if [ "$diff" != "" -a "$2" != "force" ] ; then
-                    echo "File $linked_file is not the same, aborting."
-                    echo "Difference"
-                    echo $diff
-                    exit 0
-                fi
+#                diff=`diff $linked_file $model_file`
+#                if [ "$diff" != "" -a "$2" != "force" ] ; then
+#                    echo "File $linked_file is not the same, aborting."
+#                    echo "Difference"
+#                    echo $diff
+#                    exit 0
+#                fi
 
 				rm $linked_file
 			else

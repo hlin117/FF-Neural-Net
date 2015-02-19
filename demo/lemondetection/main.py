@@ -7,7 +7,7 @@ from random import shuffle
 def main():
 
     print "Loading in the data..."
-    text = open("data/training.csv").read().split("\n")
+    text = open("small.csv").read().split("\n")
     data = list(map(int, sample.strip().split(",")) for sample in text
                 if sample.strip() != "")
     print "Shuffling..."
@@ -21,8 +21,8 @@ def main():
     start = time()
 
     num_features = len(features[0])  # Subtract one because of target values
-    nn = NeuralNet(num_features, max_epochs=20, learn_rate=.7, scale=3, 
-                   hidden_layer=[4], verbose=True, activation=("expit", 2))
+    nn = NeuralNet(num_features, max_epochs=5, learn_rate=.7, scale=3, 
+                   hidden_layer=[4], verbose=True, activation=("expit", 1))
     nn.train(features, targets)
 
     print "Done with training. Took {0} seconds to train." \
@@ -31,17 +31,18 @@ def main():
     print "Beginning with scoring..."
     start = time()
     
-    scored_text = open("data/testing.csv").read().split("\n")
+    scored_text = open("data/lemon_testing.csv").read().split("\n")
     testing = list(map(int, sample.strip().split(',')) for sample in scored_text
                    if sample.strip() != "")
     predictions = nn.score_data(testing)
+    print predictions
     print "Done with scoring. Took {0} seconds to score the dataset" \
             .format(round(time() - start, 2))
 
     with open("results.txt", "w") as f:
         f.write("IsBadBuy\n")
         for pred in predictions:
-            f.write(str(pred[0, 0]) + "\n")
+            f.write(str(pred) + "\n")
 
 
 if __name__ == "__main__":
