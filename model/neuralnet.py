@@ -126,10 +126,8 @@ class NeuralNet(object):
         hidden layer.
         """
         rescale = lambda matrix: self.scale * matrix - self.scale / 2
-        self.weights1 = np.mat(rescale(np.random.rand(self.num_features + 1,
-                               self.hidden_layer[0])))
-        self.weights2 = np.mat(rescale(np.random.rand(self.hidden_layer[0] + 1,
-                               self.num_output)))
+        self.weights1 = np.zeros((self.num_features + 1, self.hidden_layer[0])) # np.mat(rescale(np.random.rand(self.num_features + 1, self.hidden_layer[0])))
+        self.weights2 = np.zeros((self.hidden_layer[0] + 1))# np.mat(rescale(np.random.rand(self.hidden_layer[0] + 1, self.num_output)))
         if self.default_bias != "random":
             self.weights1[-1, :] = self.default_bias
             self.weights2[-1, :] = self.default_bias
