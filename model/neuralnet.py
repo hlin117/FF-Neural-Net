@@ -1,7 +1,7 @@
 from __future__ import print_function, division
 import json
-from scipy.stats import logistic
-from scipy.special import expit
+#from scipy.stats import logistic
+#from scipy.special import expit
 import math
 import numpy as np
 
@@ -81,7 +81,7 @@ class NeuralNet(object):
 
             # This is just an optimization using scipy
             if temp == 1:
-                self.default_act = expit
+                self.default_act = np.vectorize(lambda x: 1 / (1 + math.exp(-x))) #expit
                 self.default_deriv = np.vectorize(lambda x: x * (1 - x))
             else:
                 self.default_act = lambda x: logistic.cdf(x, scale=temp)
@@ -183,6 +183,8 @@ class NeuralNet(object):
                 else:
                     change1 += (-self.learn_rate * deltas[0] * outputs[0]).T
                     change2 += (-self.learn_rate * deltas[1] * outputs[1]).T
+                print(self.weights1)
+                print(self.weights2)
             if not self.online:
                 self.weights1 += change1
                 self.weights2 += change2
